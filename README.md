@@ -6,7 +6,7 @@ Incluye una función de carga y guardado de datos.
 
 ## Actualizaciones
 
-26/01/2025
+## 26/01/2025
 1. Se ha formateado el archivo para que `Polizas.py`sea lógicamente correcto con el requerimiento de tener al menos un archivo registrado 
 en `tomadores.py`. 
 2. Se ha impuesto la condición de que el `id_tomador` en `Polizas.py` deba estar entre la base de datos de `tomadores` y además que no se repita. 
@@ -14,7 +14,8 @@ en `tomadores.py`.
 4. Se ha empezado a añadir la funcionalidad `ModificarPoliza()`. Actualmente recoge los `nro_poliza` y se permite trabajar con ellos. Queda
 pendiente la implementación de la validación de cada uno de los datos.
 5. Se ha empezado a añadir la funcionalidad `ModificarTomador()`y `EliminarTomador()` a falta de probarlas ya que no detecta `CrearPoliza`. Los `import Tomadores y recibo` asi que no se puede probar hay que revisarlo.
-27/01/2025
+
+## 27/01/2025
 1. Se ha corregido parcialmente la funcionalidad `ModificarTomador()` y se han agregado funcionalidades nuevas a `CrearTomador()` de tal manera que ahora identifica una lista de tomadores ya creados con el fin de evitar duplicidad de identificaciones y documentos de identididad. 
 2. Ahora `ModificarTomador()` puede listar los campos modificables correctamente debido a un error que provocaba un comportamiento indeseado en la impresión de los campos. 
 3. Ahora `ModificarTomador()` empareja adecuadamente los documentos de identificacion del tomador `id_tomador`. Esta acción es necesaria para trabajar con los campos a modificar y para que la acción repercuta solamente a la identificación seleccionada por el usuario. 
