@@ -195,60 +195,51 @@ def ModificarTomador(listaTomador):
                                     else:
                                         print("Error. La fecha de nacimiento introducida no es válida. Por favor, introduzca una fecha en el formato DD/MM/AAAA.")
                                         continue
-                         
+                                else:
+                                    print("Error en el formato.")
+                            elif elegir_campo == 'domicilio':
+                                print(f"Antiguo valor de {elegir_campo}: {subelto[elegir_campo]}")
+                                nuevo_valor = input(f"Ingrese el nuevo valor para {elegir_campo}: ")
+                                if nuevo_valor:
+                                    subelto[elegir_campo] = nuevo_valor
+                                    print(f"{elegir_campo} modificado satisfactoriamente.")
+                                    print("Volviendo al menú principal.")
+                                    return listaTomador
+                                else:
+                                    print("Error: El nuevo valor no puede estar vacío.")
+                                    continue
+                            elif elegir_campo == 'movil_contacto':
+                                print(f"Antiguo valor de {elegir_campo}: {subelto[elegir_campo]}")
+                                try:
+                                    nuevo_valor = int(input(f"Ingrese el nuevo valor para {elegir_campo}: "))          
+                                except:
+                                    print("Error. El formato debe ser numérico y con números enteros mayores a 0.")
+                                else:
+                                    if len(str(nuevo_valor))!=9:
+                                        print("Error. El número de dígitos debe ser 9.")
+                                    elif nuevo_valor<0:
+                                        print("Error. Las cifras del número no pueden ser negativas.")
+                                    else:
+                                        print("Teléfono modificado.")
+                                        subelto[elegir_campo] = nuevo_valor
+                                        print("Volviendo al menú principal.")
+                                        return listaTomador
+                            elif elegir_campo == 'email_contacto':
+                                print(f"Antiguo valor de {elegir_campo}: {subelto[elegir_campo]}")
+                                nuevo_valor = input(f"Ingrese el nuevo valor para {elegir_campo}: ")
+                                if ComprobarCorreoElectronico(nuevo_valor):
+                                    print("Correo válido. Modificando.")
+                                    subelto[elegir_campo]=nuevo_valor
+                                    print("Volviendo al menú principal.")
+                                    return listaTomador
+                                else:
+                                    print("El correo electrónico no es válido. Se impide la modificación.")
             else:
                 print("Error: El campo elegido no es válido. Intente nuevamente.")
                 continue
         else:
             print("Error: El ID ingresado no está registrado. Intente nuevamente.")
             return listaTomador
-            # for tomador in listaTomador:
-            #     for dato in tomador:
-            #         if dato['id_tomador'] == id_tomador:
-            #             encontrado = True
-            #             print(f"Tomador encontrado: {tomador}")
-            #             print("Puede modificar los siguientes campos: denominación, domicilio, móvil, email.")
-
-            #         # Modificar denominación
-            #         nueva_denominacion = input("Nueva denominación (dejar en blanco para no cambiar): ")
-            #         if nueva_denominacion:
-            #             tomador['denominacion'] = nueva_denominacion
-
-            #         # Modificar domicilio
-            #         nuevo_domicilio = input("Nuevo domicilio (dejar en blanco para no cambiar): ")
-            #         if nuevo_domicilio:
-            #             tomador['domicilio'] = nuevo_domicilio
-
-            #         # Modificar móvil
-            #         while True:
-            #             nuevo_movil = input("Nuevo móvil (dejar en blanco para no cambiar): ")
-            #             if not nuevo_movil:
-            #                 break
-            #             if nuevo_movil.isdigit() and len(nuevo_movil) == 9:
-            #                 tomador['movil_contacto'] = int(nuevo_movil)
-            #                 break
-            #             else:
-            #                 print("Error: El número debe ser de 9 dígitos.")
-
-            #         # Modificar email
-            #         while True:
-            #             nuevo_email = input("Nuevo email (dejar en blanco para no cambiar): ")
-            #             if not nuevo_email:
-            #                 break
-            #             if ComprobarCorreoElectronico(nuevo_email):
-            #                 tomador['email_contacto'] = nuevo_email
-            #                 break
-            #             else:
-            #                 print("Error: Email no válido.")
-
-            #         print("Datos actualizados correctamente.")
-            #         break
-
-            # if not encontrado:
-            #     print("El documento ingresado no corresponde a ningún tomador registrado.")
-
-            # return listaTomador
-
 def EliminarTomador(listaTomador, listaPolizas):
     print("Bienvenido/a a la opción de eliminar tomadores.")
     if not listaTomador:

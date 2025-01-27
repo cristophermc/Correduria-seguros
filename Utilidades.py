@@ -116,7 +116,7 @@ def ComprobarCorreoElectronico(direccion:str) -> bool:
     extension = direccion_despues_punto[2]   # Parte después del '.'
 
     # Validar cada parte
-    if (len(antes_arroba) > 2 and len(antes_arroba) <= 16 and 
+    if (len(antes_arroba) > 2 and len(antes_arroba) <= 28 and 
         antes_arroba[0].isalpha() and              # La primera letra debe ser alfabética
         dominio.isalpha() and                      # El dominio debe ser solo letras
         len(extension) >= 2 and len(extension) <= 4 and 

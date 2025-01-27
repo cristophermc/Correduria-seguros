@@ -21,4 +21,7 @@ pendiente la implementación de la validación de cada uno de los datos.
 3. Ahora `ModificarTomador()` empareja adecuadamente los documentos de identificacion del tomador `id_tomador`. Esta acción es necesaria para trabajar con los campos a modificar y para que la acción repercuta solamente a la identificación seleccionada por el usuario. 
 4. Ahora `ModificarTomador()` es capaz de modificar denominaciones antiguas que pudiera tener un tomador.
 5. Ahora `Principal.py` maneja adecuadamente la interacción con el apartado de tomadores.
-6. Ahora `ModificarTomador()`es capaz de modificar datos relativos a fechas.
+6. Ahora `ModificarTomador()` es capaz de modificar datos relativos a fechas.
+7. Ahora `ModificarTomador()` valida con certeza los datos relativos a números telefónicos y correos electrónicos.
+8. Se ha ampliado la política de correos electrónicos en `Utilidades.py`.
+9. Se ha creado la funcionalidad `ModificarTomador()` y tras breves comprobaciones ha quedado finalmente implementada en el sistema.
