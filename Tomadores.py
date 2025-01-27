@@ -263,6 +263,34 @@ def EliminarTomador(listaTomador, listaPolizas):
                         listaTomador.remove(elto)
                         return listaTomador, listaPolizas
     if listaPolizas:
-        #Aqui se viene lo gordo
-        pass
+        while True:
+            if listaTomador:
+                for elto in listaTomador:
+                    for subelto in elto:
+                        print(subelto['id_tomador'])
+                for elto in listaTomador:
+                    for subelto in elto:
+                        ID.append(subelto['id_tomador'])
+                id_tomador = input("Ingrese el documento del tomador que desea eliminar: ").upper()
+                if id_tomador in ID:
+                    for elto in listaPolizas:
+                        for subelto in elto:
+                            if subelto['id_tomador'] == id_tomador:
+                                if subelto['estado_poliza'] == 'Baja':
+                                    listaPolizas.remove(elto)
+                            else:
+                                print("No se ha conseguido emparejar datos asociados.")
+                                continue
+                    for elto in listaTomador:
+                        for subelto in elto:
+                            if subelto['id_tomador'] == id_tomador:
+                                listaTomador.remove(elto)
+                            else:
+                                print("No se ha conseguido emparejar datos asociados.")
+                                continue
+                    print("Eliminados los registros coincidentes y en estado de BAJA.")
+                    return listaPolizas,listaPolizas
+                else:
+                    print("El id del tomador no coincide con los impresos anteriormente.")
+                    continue
 

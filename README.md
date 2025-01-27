@@ -26,3 +26,4 @@ pendiente la implementación de la validación de cada uno de los datos.
 8. Se ha ampliado la política de correos electrónicos en `Utilidades.py`.
 9. Se ha creado la funcionalidad `ModificarTomador()` y tras breves comprobaciones ha quedado finalmente implementada en el sistema.
 10. Implementada la funcionalidad parcial de `EliminarTomador()` para los casos donde no existan pólizas registradas. Es capaz de eliminar tomadores.
+11. Implementada la funcionalidad completa de `EliminarTomador()`para los casos donde existan pólizas registradas. El algoritmo de borrado debe ser capaz de eliminar la póliza asociada a un tomador que esté de BAJA (póliza no vigente actualmente).
