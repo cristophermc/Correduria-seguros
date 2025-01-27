@@ -8,6 +8,7 @@ creada.
 • Al borrar un recibo no hace falta borrar más nada asociado a la póliza'''
 id_recibo=0
 def CrearRecibo(id_recibo:int, banlist:list, polizas:list) -> list:
+    banlist
     lista=[]
     ID=[]
     while True:
@@ -15,7 +16,7 @@ def CrearRecibo(id_recibo:int, banlist:list, polizas:list) -> list:
         print("Se muestran a continuación una serie de números identificadores. Escoja el número sobre el cual crear un recibo asociado.")
         for elto in polizas:
             for subelto in elto:
-                print(subelto['nro_poliza'])
+                print(f"- {subelto['nro_poliza']}" , end=' ')
         for elto in polizas:
             for subelto in elto:
                 ID.append(subelto['nro_poliza'])

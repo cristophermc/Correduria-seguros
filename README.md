@@ -27,3 +27,6 @@ pendiente la implementación de la validación de cada uno de los datos.
 9. Se ha creado la funcionalidad `ModificarTomador()` y tras breves comprobaciones ha quedado finalmente implementada en el sistema.
 10. Implementada la funcionalidad parcial de `EliminarTomador()` para los casos donde no existan pólizas registradas. Es capaz de eliminar tomadores.
 11. Implementada la funcionalidad completa de `EliminarTomador()`para los casos donde existan pólizas registradas. El algoritmo de borrado debe ser capaz de eliminar la póliza asociada a un tomador que esté de BAJA (póliza no vigente actualmente).
+12. Corregido un bug que hacía que `CrearRecibo()` no cumpliese con los requisitos lógicos del diseño de la aplicación.
+13. `CrearRecibo()` ahora maneja una <i>banlist</i> con los identificadores que ya fueron usados para cumplir con las reglas de integridad referencial.
+14. `CrearRecibo()` en su algoritmo implementa y fuerza el comprobamiento de que la póliza a la que se quiere asociar exista. 

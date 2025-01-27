@@ -42,7 +42,7 @@ def DetectarDatosCarga():
      else:
           print("Archivos de guardado no encontrados en el sistema de archivos.\nProcediendo al normal funcionamiento del programa.")
           return None
-def GuardarDatos(polizasRegistro, recibos, siniestros, numeradorPoliza, numeradorRecibo, numeradorSiniestro):  # MÁS PARÁMETROS EN UN FUTURO
+def GuardarDatos(polizasRegistro, recibos, tomador, numeradorPoliza, numeradorRecibo):  # MÁS PARÁMETROS EN UN FUTURO
     # Definimos la ruta base del directorio
     ruta_datos = '../datos'
     ruta_archivo = os.path.join(ruta_datos, 'guardado.gcs')  # Ruta completa del archivo
@@ -52,7 +52,7 @@ def GuardarDatos(polizasRegistro, recibos, siniestros, numeradorPoliza, numerado
         print(f"Haciendo copia de seguridad de todos los datos en el sistema de ficheros en el directorio {ruta_datos}.")
 
         # Crear la lista de datos a guardar
-        lista = [polizasRegistro, recibos, siniestros, numeradorPoliza, numeradorRecibo, numeradorSiniestro]
+        lista = [polizasRegistro, recibos, tomador, numeradorPoliza, numeradorRecibo]
 
         # Guardar los datos en el archivo usando `with` para garantizar seguridad
         try:
@@ -75,8 +75,11 @@ if __name__=='__main__':
     os.chdir('./datos') #Cambiamos de directorio para controlar las entradas y salidas de datos / DIRECTORIO DE GUARDADO DE DATOS
     datos_cargados=DetectarDatosCarga() #Procedemos a la carga opcional de datos 
     if datos_cargados:
-        polizasRegistro, recibos, siniestros, numeradorPoliza, numeradorRecibo, numeradorSiniestro = datos_cargados
-        nrosPolizas=[]
+        polizasRegistro, tomador, recibos, numeradorPoliza, numeradorRecibo = datos_cargados
+        banlistPolizas=[]
+        banlistRecibos=[]
+        banlistTomadores=[]
+
 
     else:
         polizasRegistro=[] #listado de pólizas que actualmente existen / o si no existen, directorio de guardado
@@ -315,7 +318,7 @@ if __name__=='__main__':
                     print("Antes de guardar tenga en cuenta que sobreescribirá todos los registros anteriores existentes.")
                     continuarGuarda=input("¿Desea continuar de todos modos? s/n >>> ").lower()
                     if continuarGuarda=='s':
-                        GuardarDatos(polizasRegistro, recibos, siniestros, numeradorPoliza, numeradorRecibo, numeradorSiniestro)
+                        GuardarDatos(polizasRegistro, tomador, recibos, numeradorPoliza, numeradorRecibo)
                         break
                     elif continuarGuarda=='n':
                         print("Operación de guardado anulada. Volviendo al menú principal.")
