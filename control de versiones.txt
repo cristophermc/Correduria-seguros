@@ -1,0 +1,8 @@
+#Control de versiones#
+
+
+21/01/2025 - Añadida funcionalidad para crear recibos, enlazados a las pólizas existentes. 
+21/01/2025 - Añadida funcionalidad para mostrar estadísticas de pólizas creadas.
+
+22/01/2025 - Se han corregido cambios acerca del manejo de los identificadores. Ahora al cargar los datos los identificadores parten del número de identificación
+que ya tenían.

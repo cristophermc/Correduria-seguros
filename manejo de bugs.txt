@@ -1,0 +1,7 @@
+#Archivo de manejo de bugs
+
+|control|
+
+
+Los identificadores, ahora con los datos cargados, deben ser seriales. Esto quiere decir que cuando se detecte la carga, deberá de detectar quién tiene el número de póliza, por ejemplo, más grande. 
+Esto nos dará información para seguir trabajando con datos cargados de forma serial, y también para control de flujo de datos en caso de que no hayan datos para operar de manera natural partiendo de 0.
