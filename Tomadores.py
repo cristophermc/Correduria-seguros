@@ -167,16 +167,18 @@ def ModificarTomador(listaTomador):
                 for elto in listaTomador:
                     for subelto in elto:
                         if subelto['id_tomador'] == id_tomador:
-                            print(f"Antiguo valor de {elegir_campo}: {subelto[elegir_campo]}")
-                            nuevo_valor = input(f"Ingrese el nuevo valor para {elegir_campo}: ")
-                            if nuevo_valor:
-                                subelto[elegir_campo] = nuevo_valor
-                                print(f"{elegir_campo} modificado satisfactoriamente.")
-                                print("Volviendo al menú principal.")
-                                return listaTomador
-                            else:
-                                print("Error: El nuevo valor no puede estar vacío.")
-                                continue
+                            if elegir_campo == 'denominacion':
+                                print(f"Antiguo valor de {elegir_campo}: {subelto[elegir_campo]}")
+                                nuevo_valor = input(f"Ingrese el nuevo valor para {elegir_campo}: ")
+                                if nuevo_valor:
+                                    subelto[elegir_campo] = nuevo_valor
+                                    print(f"{elegir_campo} modificado satisfactoriamente.")
+                                    print("Volviendo al menú principal.")
+                                    return listaTomador
+                                else:
+                                    print("Error: El nuevo valor no puede estar vacío.")
+                                    continue
+                            elif elegir_campo == '' 
             else:
                 print("Error: El campo elegido no es válido. Intente nuevamente.")
                 continue
