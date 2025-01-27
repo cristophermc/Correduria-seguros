@@ -242,33 +242,27 @@ def ModificarTomador(listaTomador):
             return listaTomador
 def EliminarTomador(listaTomador, listaPolizas):
     print("Bienvenido/a a la opción de eliminar tomadores.")
+    ID=[]
+    listaTomador
+    listaPolizas
     if not listaTomador:
-        print("No hay tomadores registrados para eliminar.")
+        print("Error. Se necesita crear un registro de tomador primeramente.")
         return listaTomador, listaPolizas
+    if not listaPolizas:
+        for elto in listaTomador:
+            for subelto in elto:
+                print(subelto['id_tomador'])
+        for elto in listaTomador:
+            for subelto in elto:
+                ID.append(subelto['id_tomador'])
+        id_tomador = input("Ingrese el documento del tomador que desea eliminar: ").upper()
+        if id_tomador in ID:
+            for elto in listaTomador:
+                for subelto in elto:
+                    if subelto['id_tomador'] == id_tomador:
+                        listaTomador.remove(elto)
+                        return listaTomador, listaPolizas
+    if listaPolizas:
+        #Aqui se viene lo gordo
+        pass
 
-    id_tomador = input("Ingrese el documento del tomador que desea eliminar: ").upper()
-    encontrado = False
-
-    for tomador in listaTomador:
-        if tomador['id_tomador'] == id_tomador:
-            encontrado = True
-
-            # Verificar si tiene pólizas vigentes
-            tiene_polizas = any(poliza['id_tomador'] == id_tomador for poliza in listaPolizas)
-
-            if tiene_polizas:
-                print("No se puede eliminar este tomador porque tiene pólizas vigentes.")
-                return listaTomador, listaPolizas
-
-            # Eliminar las pólizas asociadas (si las hubiera, pero no están vigentes)
-            listaPolizas = [poliza for poliza in listaPolizas if poliza['id_tomador'] != id_tomador]
-
-            # Eliminar el tomador
-            listaTomador.remove(tomador)
-            print("Tomador y datos asociados eliminados correctamente.")
-            break
-
-    if not encontrado:
-        print("El documento ingresado no corresponde a ningún tomador registrado.")
-
-    return listaTomador, listaPolizas

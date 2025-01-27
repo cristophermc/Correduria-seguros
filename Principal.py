@@ -193,8 +193,14 @@ if __name__=='__main__':
                             tomador=ModificarTomador(tomador)
                             break
                         case '3':
-                            tomador, listaPolizas = EliminarTomador(tomador, listaPolizas)
-                            break
+                            if not polizasRegistro:
+                                tomador,polizasRegistro=EliminarTomador(tomador, polizasRegistro) 
+                                break
+                            if polizasRegistro:
+                                #Se pasa el tomador, y se devuelve una lista con el elemento eliminado.
+                                #También se debe eliminar el registro de una póliza.
+                                tomador, polizasRegistro=EliminarTomador(tomador, polizasRegistro)
+                                break                               
                         case '4':
                             print("Volviendo al menú principal.")
                             break
