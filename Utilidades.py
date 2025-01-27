@@ -139,6 +139,12 @@ def RecogerBanlistTomador(tomador:list)-> list:
         for subelto in elto:
             banlist.append(subelto['id_tomador'])
     return banlist
+def RecogerBanlistRecibo(recibos:list)->list:
+    banlist=[]
+    for elto in recibos:
+        for subelto in elto:
+            banlist.append(subelto['id_recibo'])
+        return banlist
             
 
 

@@ -22,6 +22,7 @@ from Utilidades import SerialSiniestro
 from Siniestros import CrearSiniestro
 from Utilidades import RecogerBanlistPolizas
 from Utilidades import RecogerBanlistTomador
+from Utilidades import RecogerBanlistRecibo
 #espacio para definición de funciones internas del programa / rutinas necesarias para consolidar los datos
 
 def DetectarDatosCarga():
@@ -82,12 +83,12 @@ if __name__=='__main__':
         tomador=[]
         recibos=[]
         siniestros=[]
-        nrosPolizas=[]
         numeradorPoliza=0
         numeradorRecibo=0
         numeradorSiniestro=0
         banlistPolizas=[]
         banlistTomadores=[]
+        banlistRecibos=[]
     while True:
         print("----------------------------------------")
         print("Correduría Mi Coche Asegurado")
@@ -222,13 +223,10 @@ if __name__=='__main__':
                                 print("Error. Aún no hay pólizas registradas. Primeramente deberá existir una póliza en el registro para poder crear un recibo asociado. Volviendo al menú principal.")
                                 break
                             elif polizasRegistro:
-                                for lista in polizasRegistro:
-                                    for sublista in lista:
-                                        if sublista['nro_poliza'] not in nrosPolizas:  # Verificar si ya existe
-                                            nrosPolizas.append(sublista['nro_poliza'])  # Solo añadir si no existe
                                 numeradorRecibo = SerialRecibo(numeradorRecibo)
-                                nuevoRecibo = CrearRecibo(nrosPolizas, numeradorRecibo)
+                                nuevoRecibo = CrearRecibo(numeradorRecibo, banlistRecibos, polizasRegistro)
                                 recibos.append(nuevoRecibo)
+                                banlistRecibos=RecogerBanlistRecibo(recibos)
                                 break
                         case '2':
                             if not polizasRegistro:
