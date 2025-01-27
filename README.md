@@ -30,3 +30,4 @@ pendiente la implementación de la validación de cada uno de los datos.
 12. Corregido un bug que hacía que `CrearRecibo()` no cumpliese con los requisitos lógicos del diseño de la aplicación.
 13. `CrearRecibo()` ahora maneja una <i>banlist</i> con los identificadores que ya fueron usados para cumplir con las reglas de integridad referencial.
 14. `CrearRecibo()` en su algoritmo implementa y fuerza el comprobamiento de que la póliza a la que se quiere asociar exista. 
+15. Solucionado un problema de serialización e integridad con la banlist referida a los recibos.

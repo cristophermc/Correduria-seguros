@@ -42,7 +42,7 @@ def DetectarDatosCarga():
      else:
           print("Archivos de guardado no encontrados en el sistema de archivos.\nProcediendo al normal funcionamiento del programa.")
           return None
-def GuardarDatos(polizasRegistro, recibos, tomador, numeradorPoliza, numeradorRecibo):  # MÁS PARÁMETROS EN UN FUTURO
+def GuardarDatos(polizasRegistro, recibos, tomador, numeradorPoliza, numeradorRecibo, banlistPolizas, banlistTomadores, banlistRecibos):  # MÁS PARÁMETROS EN UN FUTURO
     # Definimos la ruta base del directorio
     ruta_datos = '../datos'
     ruta_archivo = os.path.join(ruta_datos, 'guardado.gcs')  # Ruta completa del archivo
@@ -52,7 +52,7 @@ def GuardarDatos(polizasRegistro, recibos, tomador, numeradorPoliza, numeradorRe
         print(f"Haciendo copia de seguridad de todos los datos en el sistema de ficheros en el directorio {ruta_datos}.")
 
         # Crear la lista de datos a guardar
-        lista = [polizasRegistro, recibos, tomador, numeradorPoliza, numeradorRecibo]
+        lista = [polizasRegistro, recibos, tomador, numeradorPoliza, numeradorRecibo, banlistPolizas, banlistTomadores, banlistRecibos]
 
         # Guardar los datos en el archivo usando `with` para garantizar seguridad
         try:
@@ -75,10 +75,7 @@ if __name__=='__main__':
     os.chdir('./datos') #Cambiamos de directorio para controlar las entradas y salidas de datos / DIRECTORIO DE GUARDADO DE DATOS
     datos_cargados=DetectarDatosCarga() #Procedemos a la carga opcional de datos 
     if datos_cargados:
-        polizasRegistro, tomador, recibos, numeradorPoliza, numeradorRecibo = datos_cargados
-        banlistPolizas=[]
-        banlistRecibos=[]
-        banlistTomadores=[]
+        polizasRegistro, tomador, recibos, numeradorPoliza, numeradorRecibo, banlistPolizas, banlistTomadores, banlistRecibos = datos_cargados
 
 
     else:
@@ -226,7 +223,7 @@ if __name__=='__main__':
                                 print("Error. Aún no hay pólizas registradas. Primeramente deberá existir una póliza en el registro para poder crear un recibo asociado. Volviendo al menú principal.")
                                 break
                             elif polizasRegistro:
-                                numeradorRecibo = SerialRecibo(numeradorRecibo)
+                                numeradorRecibo = SerialRecibo(numeradorRecibo) #No es del todo seriado
                                 nuevoRecibo = CrearRecibo(numeradorRecibo, banlistRecibos, polizasRegistro)
                                 recibos.append(nuevoRecibo)
                                 banlistRecibos=RecogerBanlistRecibo(recibos)
@@ -318,7 +315,7 @@ if __name__=='__main__':
                     print("Antes de guardar tenga en cuenta que sobreescribirá todos los registros anteriores existentes.")
                     continuarGuarda=input("¿Desea continuar de todos modos? s/n >>> ").lower()
                     if continuarGuarda=='s':
-                        GuardarDatos(polizasRegistro, tomador, recibos, numeradorPoliza, numeradorRecibo)
+                        GuardarDatos(polizasRegistro, tomador, recibos, numeradorPoliza, numeradorRecibo, banlistPolizas, banlistTomadores, banlistRecibos)
                         break
                     elif continuarGuarda=='n':
                         print("Operación de guardado anulada. Volviendo al menú principal.")
