@@ -18,5 +18,6 @@ pendiente la implementación de la validación de cada uno de los datos.
 1. Se ha corregido parcialmente la funcionalidad `ModificarTomador()` y se han agregado funcionalidades nuevas a `CrearTomador()` de tal manera que ahora identifica una lista de tomadores ya creados con el fin de evitar duplicidad de identificaciones y documentos de identididad. 
 2. Ahora `ModificarTomador()` puede listar los campos modificables correctamente debido a un error que provocaba un comportamiento indeseado en la impresión de los campos. 
 3. Ahora `ModificarTomador()` empareja adecuadamente los documentos de identificacion del tomador `id_tomador`. Esta acción es necesaria para trabajar con los campos a modificar y para que la acción repercuta solamente a la identificación seleccionada por el usuario. 
-4. Ahora `ModificarTomador()`es capaz de modificar denominaciones antiguas que pudiera tener un tomador.
+4. Ahora `ModificarTomador()` es capaz de modificar denominaciones antiguas que pudiera tener un tomador.
 5. Ahora `Principal.py` maneja adecuadamente la interacción con el apartado de tomadores.
+6. Ahora `ModificarTomador()`es capaz de modificar datos relativos a fechas.

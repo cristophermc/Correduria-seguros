@@ -178,14 +178,30 @@ def ModificarTomador(listaTomador):
                                 else:
                                     print("Error: El nuevo valor no puede estar vacío.")
                                     continue
-                            elif elegir_campo == '' 
+                            elif elegir_campo == 'fecha_nacimiento':
+                                print(f"Antiguo valor de {elegir_campo}: {subelto[elegir_campo]}")
+                                nuevo_valor = input(f"Ingrese el nuevo valor para {elegir_campo}: ")
+                                if len(nuevo_valor)==10 and nuevo_valor[2]=='/' and nuevo_valor[5]=='/' and nuevo_valor[:2].isdigit() and nuevo_valor[3:5].isdigit() and nuevo_valor[6:].isdigit():
+                                    FechaCambiar=nuevo_valor.split('/')
+                                    listaAux=[]
+                                    for elto in FechaCambiar:
+                                        elto=int(elto)
+                                        listaAux.append(elto)
+                                    if listaAux[0]>=1 and listaAux[0]<=31 and listaAux[1]>=1 and listaAux[1]<=12 and listaAux[2]>=1900 and listaAux[2]<=2006:
+                                         print("Fecha de nacimiento válida. Registrando...")
+                                         subelto[elegir_campo]=nuevo_valor
+                                         print("Volviendo al menú principal")
+                                         return listaTomador
+                                    else:
+                                        print("Error. La fecha de nacimiento introducida no es válida. Por favor, introduzca una fecha en el formato DD/MM/AAAA.")
+                                        continue
+                         
             else:
                 print("Error: El campo elegido no es válido. Intente nuevamente.")
                 continue
         else:
             print("Error: El ID ingresado no está registrado. Intente nuevamente.")
-
-        return listaTomador
+            return listaTomador
             # for tomador in listaTomador:
             #     for dato in tomador:
             #         if dato['id_tomador'] == id_tomador:
