@@ -241,6 +241,8 @@ if __name__=='__main__':
                         case '3':
                             if not recibos:
                                 print("No hay recibos registrados para eliminar.")
+                            if not polizasRegistro:
+                                print("No hay registros de pólizas para asociar.")
                             else:
                                 recibos = EliminarRecibo(recibos)
                             break

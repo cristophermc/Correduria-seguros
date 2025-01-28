@@ -163,7 +163,7 @@ def CrearPoliza(nro_poliza:int, tomadores:list, banlist:list) -> list:
 
     id_cobertura=tuple(idConductor)
     estado_poliza=''
-    print("Cargando datos de actualización de estado de póliza...\nLa póliza puede solamente estar en uno de los siguientes estados:\nCobrada\nPteCobro\Baja")
+    print("Cargando datos de actualización de estado de póliza...\nLa póliza puede solamente estar en uno de los siguientes estados:\nCobrada\nPteCobro\nBaja")
     while True:
         epeleccion=input("Escoja entre (C)obrada (P)teCobro o (B)aja >>>").upper()
         if epeleccion == 'C':

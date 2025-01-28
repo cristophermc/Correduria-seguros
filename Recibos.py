@@ -320,6 +320,16 @@ def EliminarRecibo(listaRecibos: list) -> list:
     print("A continuación se muestran los recibos disponibles:")
     for elto in listaRecibos:
         for subelto in elto:
-            print(f"id:recibo: {subelto['id_recibo']}")
+            print(f"id_recibo: {subelto['id_recibo']}")
             pass
-    #//Continuar con barrido de comprobación
+    seleccionarID=int(input("Introduzca el ID del recibo que desea eliminar >>> "))
+    for elto in listaRecibos:
+        for recibo in elto:
+            if recibo['id_recibo']==seleccionarID:
+                if recibo['estado_recibo'] != 'P' and subelto['estado_recibo'] != 'C':
+                    listaRecibos.remove(elto)
+                    print(f"El recibo con ID {seleccionarID} ha sido eliminado.")
+                    return listaRecibos
+                else:
+                    print("No se puede eliminar un recibo que esté VIGOR.\nUn recibo VIGOR está en estado (P)endiente o (C)obrado.")
+                    return listaRecibos
