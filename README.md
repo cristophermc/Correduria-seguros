@@ -32,4 +32,5 @@ pendiente la implementación de la validación de cada uno de los datos.
 14. `CrearRecibo()` en su algoritmo implementa y fuerza el comprobamiento de que la póliza a la que se quiere asociar exista. 
 15. Solucionado un problema de serialización e integridad con la banlist referida a los recibos.
 ## 28/01/2025
-1. Implementar el sistema de modificado de los recibos.
+1. Corregido un error que agregaba datos de tipo None en `Recibos.py`. 
+2. Implementada la función de modificado de recibos. Se llama `ModificarRecibo()`.
