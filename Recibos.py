@@ -314,48 +314,12 @@ def ModificarRecibo(lista_recibos: list, polizas:list) -> list:
 
 def EliminarRecibo(listaRecibos: list) -> list:
     print("Bienvenido/a al asistente para eliminar recibos.")
-#[[{id_recibo}]] for for 
     if not listaRecibos: #Comprobación de que la lista está vacía
         print("No hay recibos registrados actualmente. Volviendo al menú principal.")
         return listaRecibos
-
     print("A continuación se muestran los recibos disponibles:")
-    #for elemento in listaRecibos
-    #for recibo in elemento
-
-    for elemento in listaRecibos:
-        for recibo in elemento:
-            print(f"ID Recibo: {recibo['id_recibo']}, Número de Póliza: {recibo['nro_poliza']}, Estado: {recibo['estado_recibo']}")
-
-    while True:
-        try:
-            id_recibo = int(input("Escriba el identificador del recibo que desea eliminar >>> "))
-        except ValueError:
-            print("Error. Introduzca un valor numérico válido.")
-            continue
-
-        # Buscar el recibo con el ID proporcionado
-        recibo_encontrado = None
-        for recibo in listaRecibos:
-            if recibo['id_recibo'] == id_recibo:
-                recibo_encontrado = recibo
-                break
-
-        if recibo_encontrado:
-            print("Recibo encontrado:")
-            print(f"ID Recibo: {recibo_encontrado['id_recibo']}, Número de Póliza: {recibo_encontrado['nro_poliza']}, Estado: {recibo_encontrado['estado_recibo']}")
-
-            # Confirmar eliminación
-            while True:
-                confirmacion = input("¿Está seguro de que desea eliminar este recibo? (S/N) >>> ").upper()
-                if confirmacion == 'S':
-                    listaRecibos.remove(recibo_encontrado)
-                    print("Recibo eliminado correctamente.")
-                    return listaRecibos
-                elif confirmacion == 'N':
-                    print("Operación cancelada. Volviendo al menú principal.")
-                    return listaRecibos
-                else:
-                    print("Error. Responda con 'S' o 'N'.")
-        else:
-            print("No se encontró ningún recibo con el identificador proporcionado. Intente nuevamente.")
+    for elto in listaRecibos:
+        for subelto in elto:
+            print(f"id:recibo: {subelto['id_recibo']}")
+            pass
+    #//Continuar con barrido de comprobación
