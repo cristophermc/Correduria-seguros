@@ -44,16 +44,18 @@ def CrearRecibo(id_recibo:int, banlist:list, polizas:list) -> list:
     # Validación de fecha de inicio
     while True:
         fecha_inicio = input(">>> ")
-        if len(fecha_inicio) == 10 and fecha_inicio[2] == '/' and fecha_inicio[5] == '/' and \
-           fecha_inicio[:2].isdigit() and fecha_inicio[3:5].isdigit() and fecha_inicio[6:].isdigit():
-            dia, mes, anio = map(int, fecha_inicio.split('/'))
-            if 1 <= dia <= 31 and 1 <= mes <= 12 and 1900 <= anio <= 2025:
-                print("Fecha de inicio válida. Registrando...")
+        if len(fecha_inicio)==10 and fecha_inicio[2]=='/' and fecha_inicio[5]=='/' and fecha_inicio[:2].isdigit() and fecha_inicio[3:5].isdigit() and fecha_inicio[6:].isdigit():
+            fechaIn=fecha_inicio.split('/')
+            listaAux=[]
+            for elto in fechaIn:
+                elto=int(elto)
+                listaAux.append(elto)
+            if listaAux[0]>=1 and listaAux[0]<=31 and listaAux[1]>=1 and listaAux[1]<=12 and listaAux[2]>=1900 and listaAux[2]<=2025:
+                print("Fecha de nacimiento válida. Registrando...")
                 break
-            else:
-                print("Error. La fecha de inicio introducida no es válida. Por favor, introduzca una fecha en el formato DD/MM/AAAA.")
         else:
-            print("Error. Formato incorrecto. Use DD/MM/AAAA.")
+            print("Error. La fecha de nacimiento introducida no es válida. Por favor, introduzca una fecha en el formato DD/MM/AAAA.")
+            continue
 
     # Duración del recibo
     print("\nCargando rutinas de estado de duración de un recibo...")
@@ -121,145 +123,168 @@ def CrearRecibo(id_recibo:int, banlist:list, polizas:list) -> list:
     return lista
 
 
-def ModificarRecibo(lista_recibos: list) -> list:
+def ModificarRecibo(lista_recibos: list, polizas:list) -> list:
+    CAMPOS=[]
+    nroPol=[]
+    duraciones = ('A', 'S', 'T', 'M')
 
     #Se tienen que desempaquetar las claves primeramente para que podamos sacar dos colecciones:
     #Colección A: campos=[] - lista con los campos de cada uno de los recibos - En el contexto de nuestra aplicación lo usamos como verificador cuando el usuario trata de acceder a los datos
     #Colección B: lista_recibos=[] - lista con los datos completos recibos de la llamada de la función.
-    if not lista_recibos:#1. Lo primero que hacemos es comprobar que la lista NO esté vacía. Si está VACIA la mandamos de vuelta y salimos al menú. 
-        print("No hay recibos disponibles para modificar.")
-        return lista_recibos
-    if lista_recibos: #Si la lista efectivamente tiene datos dentro (el contexto es QUE NO ESTÉ VACÍA):
-        print("Lista de recibos disponibles:")
+    #1. Lo primero que hacemos es comprobar que la lista NO esté vacía. Si está VACIA la mandamos de vuelta y salimos al menú. 
+    for elto in lista_recibos:
+        for subelto in elto:
+            for clave in subelto.keys():
+                if clave!='id_recibo' and clave not in CAMPOS:
+                    CAMPOS.append(clave)
+    for elto in lista_recibos:
+        for subelto in elto:
+            nroPol.append(subelto['nro_poliza'])
+    while True:
+        ID=[]
+        print("Lista de identificadores de recibos:")
         for elto in lista_recibos:
-            for recibo in elto:
-                print(f"ID Recibo: {recibo['id_recibo']} | Póliza: {recibo['nro_poliza']}")
+            for subelto in elto:
+                ID.append(subelto['id_recibo'])
+                print(f"- {subelto['id_recibo']}", end=' ')
 
-        id_modificar = int(input("Introduzca el ID del recibo que desea modificar >>> "))
-        if id_modificar==1:
-            print("Esto es una prueba de acceso.")
-            return lista_recibos
-        else:
-            print("No es 1, que es la clave de ruptura.")
+        print("Seleccione un recibo que quiera MODIFICAR: ")
+        seleccionarID=int(input(">>> "))
+        if seleccionarID in ID: #Nos aseguramos de que el ID esté entre los datos cotejados.
+            print(f"Se ha seleccionado el recibo con identificador {seleccionarID}")
+            while True:
+                print("\nSeleccione el campo que desea MODIFICAR:")
+                for campo in CAMPOS:
+                    print(f"- {campo}", end=' ')
+                seleccionarCampo=input(">>> ").lower()
+                if seleccionarCampo in CAMPOS:
+                    match seleccionarCampo:
+                        case 'nro_poliza':
+                            print("Nº de póliza anterior")
+                            for elto in lista_recibos:
+                                for subelto in elto:
+                                    if subelto['id_recibo']==seleccionarID:
+                                        print(subelto['nro_poliza'])
+                                    else:
+                                        print("No hay números de póliza registrados para este recibo.")
+                                        continue
+                            print("Posibles cambios: ")
+                            for nro in nroPol: 
+                                print(f"- {nro}", end=' ')
+                            nuevaPoliza=int(input("Escriba el nuevo número de póliza >>> "))
+                            if nuevaPoliza in nroPol: #Nos aseguramos de que el nuevo número de póliza esté entre los datos cotejados.
+                                for elto in lista_recibos:
+                                    for subelto in elto:
+                                        if subelto['id_recibo']==seleccionarID:
+                                            subelto['nro_poliza']=nuevaPoliza
+                            
+                                print("Recibo modificado.")
+                                return lista_recibos
+                            else:
+                                print("Error. El número de póliza introducido no se encuentra en la lista.")
+                        case 'fecha_inicio':
+                            print("Antigua fecha de inicio")
+                            for elto in lista_recibos:
+                                for subelto in elto:
+                                    if subelto['id_recibo']==seleccionarID:
+                                        print(subelto['fecha_inicio'])
+                                    else:
+                                        print("No hay fechas de inicio registradas para este recibo.")
+                                        continue
+                            cambioFecha=input("Introduzca una nueva fecha: ")
+                            if len(cambioFecha)==10 and cambioFecha[2]=='/' and cambioFecha[5]=='/' and cambioFecha[:2].isdigit() and cambioFecha[3:5].isdigit() and cambioFecha[6:].isdigit():
+                                fechaCam=cambioFecha.split('/')
+                                listaAux=[]
+                                for elto in fechaCam:
+                                    elto=int(elto)
+                                    listaAux.append(elto)
+                                if listaAux[0]>=1 and listaAux[0]<=31 and listaAux[1]>=1 and listaAux[1]<=12 and listaAux[2]>=1900 and listaAux[2]<=2025:
+                                    print("Fecha de incio válida. Registrando...")
+                                    for elto in lista_recibos:
+                                        for subelto in elto:
+                                            if subelto['id_recibo']==seleccionarID:
+                                                subelto['fecha_inicio']=cambioFecha
+                                    print("Fecha de inicio cambiada. \nRecibo modificado.")
+                                    return lista_recibos
+                            else:
+                                print("Error. La fecha de inicio introducida no es válida. Por favor, introduzca una fecha en el formato DD/MM/AAAA.")
+                                continue
 
-        
-        # for recibo in lista_recibos:
-        #     if recibo['id_recibo'] == id_modificar:
-        #         print(f"Recibo seleccionado: {recibo}")
-        #         print("Seleccione qué desea modificar:\n1. Fecha de inicio\n2. Duración\n3. Importe a cobrar\n4. Fecha de cobro\n5. Estado del recibo\n6. Importe a pagar\n7. Estado de liquidación\n8. Fecha de liquidación")
-        #         eleccion = int(input(">>> "))
+                        case 'duracion':
+                            print("Antiguos datos de duración: ")
+                            for elto in lista_recibos:
+                                for subelto in elto:
+                                    if subelto['id_recibo']==seleccionarID:
+                                        print(f"Duración: {subelto['duracion']}")
+                                    else:
+                                        print("No hay duraciones registradas para este recibo.")
+                                        continue
+                            cambioDuracion=input(f"Seleccione una nueva duración entre {duraciones} >>> ")
+                            if cambioDuracion in duraciones:
+                                for elto in lista_recibos:
+                                    for subelto in elto:
+                                        if subelto['id_recibo']==seleccionarID:
+                                            subelto['duracion']=cambioDuracion
+                            else:
+                                print("El cambio sugerido no se encuentra entre las opciones disponibles.")
+                                continue
+                        case 'importe_cobrar':
+                            print("Antiguos datos del importe: ")
+                            for elto in lista_recibos:
+                                for subelto in elto:
+                                    if subelto['id_recibo']==seleccionarID:
+                                        print(f"Importe a cobrar: {subelto['importe_cobrar']}")
+                                    else:
+                                        print("No hay importes registrados para este recibo.")
+                                        continue
+                            cambioImporte=float(input("Introduzca un nuevo importe a cobrar >>> "))
+                            if cambioImporte >= 0:
+                                print("Importe válido. Registrando...")
+                                for elto in lista_recibos:
+                                    for subelto in elto:
+                                        if subelto['id_recibo']==seleccionarID:
+                                            subelto['importe_cobrar']=cambioImporte
+                            else:
+                                print("Error. El importe debe ser superior a 0.")
+                                continue
+                        case 'fecha_cobro':
+                            print("Antigua fecha de inicio")
+                            for elto in lista_recibos:
+                                for subelto in elto:
+                                    if subelto['id_recibo']==seleccionarID:
+                                        print(subelto['fecha_cobro'])
+                                    else:
+                                        print("No hay fechas de cobro registradas para este recibo.")
+                                        continue
+                            cambioFecha=input("Introduzca una nueva fecha: ")
+                            if len(cambioFecha)==10 and cambioFecha[2]=='/' and cambioFecha[5]=='/' and cambioFecha[:2].isdigit() and cambioFecha[3:5].isdigit() and cambioFecha[6:].isdigit():
+                                fechaCam=cambioFecha.split('/')
+                                listaAux=[]
+                                for elto in fechaCam:
+                                    elto=int(elto)
+                                    listaAux.append(elto)
+                                if listaAux[0]>=1 and listaAux[0]<=31 and listaAux[1]>=1 and listaAux[1]<=12 and listaAux[2]>=1900 and listaAux[2]<=2025:
+                                    print("Fecha de incio válida. Registrando...")
+                                    for elto in lista_recibos:
+                                        for subelto in elto:
+                                            if subelto['id_recibo']==seleccionarID:
+                                                subelto['fecha_cobro']=cambioFecha
+                                    print("Fecha de cobro cambiada. \nRecibo modificado.")
+                                    return lista_recibos
+                            else:
+                                print("Error. La fecha de cobro introducida no es válida. Por favor, introduzca una fecha en el formato DD/MM/AAAA.")
+                                continue
+
+
+                elif seleccionarCampo == ' ':
+                    print("No es posible introducir un campo vacío. Por favor escriba datos.")
+                else:
+                    print("Error. El campo escrito no se encuentra entre las opciones disponibles.")
+                    continue
                 
-        #         if eleccion == 1:
-        #             print("Introduzca la nueva fecha de inicio (DD/MM/AAAA):")
-        #             while True:
-        #                 fecha_inicio = input(">>> ")
-        #                 if len(fecha_inicio) == 10 and fecha_inicio[2] == '/' and fecha_inicio[5] == '/' and fecha_inicio[:2].isdigit() and fecha_inicio[3:5].isdigit() and fecha_inicio[6:].isdigit():
-        #                     fechaIn = fecha_inicio.split('/')
-        #                     listaAux = [int(el) for el in fechaIn]
-        #                     if listaAux[0] >= 1 and listaAux[0] <= 31 and listaAux[1] >= 1 and listaAux[1] <= 12 and listaAux[2] >= 1900 and listaAux[2] <= 2025:
-        #                         print("Fecha de inicio válida. Registrando...")
-        #                         recibo['fecha_inicio'] = fecha_inicio
-        #                         break
-        #                     else:
-        #                         print("Fecha no válida. Inténtelo de nuevo.")
-        #                 else:
-        #                     print("Formato incorrecto. Inténtelo de nuevo.")
 
-        #         elif eleccion == 2:
-        #             print("Seleccione una nueva duración: (A)nual, (S)emestral, (T)rimestral, (M)ensual.")
-        #             duraciones = ('A', 'S', 'T', 'M')
-        #             while True:
-        #                 nueva_duracion = input(">>> ").upper()
-        #                 if nueva_duracion in duraciones:
-        #                     recibo['duracion'] = nueva_duracion
-        #                     print("Duración actualizada con éxito.")
-        #                     break
-        #                 else:
-        #                     print("Selección incorrecta. Inténtelo nuevamente.")
 
-        #         elif eleccion == 3:
-        #             print("Introduzca el nuevo importe a cobrar:")
-        #             while True:
-        #                 try:
-        #                     nuevo_importe = float(input(">>> "))
-        #                     recibo['importe_cobrar'] = nuevo_importe
-        #                     print("Importe actualizado.")
-        #                     break
-        #                 except:
-        #                     print("Entrada inválida. Inténtelo de nuevo.")
 
-        #         elif eleccion == 4:
-        #             print("Introduzca la nueva fecha de cobro (DD/MM/AAAA):")
-        #             while True:
-        #                 fecha_cobro = input(">>> ")
-        #                 if len(fecha_cobro) == 10 and fecha_cobro[2] == '/' and fecha_cobro[5] == '/' and fecha_cobro[:2].isdigit() and fecha_cobro[3:5].isdigit() and fecha_cobro[6:].isdigit():
-        #                     fechaCo = fecha_cobro.split('/')
-        #                     listaAux = [int(el) for el in fechaCo]
-        #                     if listaAux[0] >= 1 and listaAux[0] <= 31 and listaAux[1] >= 1 and listaAux[1] <= 12 and listaAux[2] >= 1900 and listaAux[2] <= 2025:
-        #                         recibo['fecha_cobro'] = fecha_cobro
-        #                         print("Fecha de cobro actualizada.")
-        #                         break
-        #                     else:
-        #                         print("Fecha no válida. Inténtelo nuevamente.")
-        #                 else:
-        #                     print("Formato incorrecto. Inténtelo nuevamente.")
-
-        #         elif eleccion == 5:
-        #             print("Seleccione el nuevo estado del recibo:")
-        #             estados_recibos = ['P', 'PB', 'C', 'CB', 'B']
-        #             print("Pendiente: P\nPendiente_banco: PB\nCobrado: C\nCobrado_banco: CB\nBaja: B")
-        #             while True:
-        #                 nuevo_estado = input(">>> ")
-        #                 if nuevo_estado in estados_recibos:
-        #                     recibo['estado_recibo'] = nuevo_estado
-        #                     print("Estado actualizado.")
-        #                     break
-        #                 else:
-        #                     print("Entrada inválida. Inténtelo nuevamente.")
-
-        #         elif eleccion == 6:
-        #             print("Introduzca el nuevo importe a pagar:")
-        #             while True:
-        #                 try:
-        #                     nuevo_importe_pagar = float(input(">>> "))
-        #                     recibo['importe_pagar'] = nuevo_importe_pagar
-        #                     print("Importe actualizado.")
-        #                     break
-        #                 except:
-        #                     print("Entrada inválida. Inténtelo de nuevo.")
-
-        #         elif eleccion == 7:
-        #             print("Seleccione el nuevo estado de liquidación: (P)endiente o (L)iquidado.")
-        #             while True:
-        #                 nuevo_estado_liquidacion = input(">>> ").upper()
-        #                 if nuevo_estado_liquidacion in ['P', 'L']:
-        #                     recibo['estado_liquidacion'] = 'Pendiente' if nuevo_estado_liquidacion == 'P' else 'Liquidado'
-        #                     print("Estado de liquidación actualizado.")
-        #                     break
-        #                 else:
-        #                     print("Selección incorrecta. Inténtelo nuevamente.")
-
-        #         elif eleccion == 8:
-        #             print("Introduzca la nueva fecha de liquidación (DD/MM/AAAA):")
-        #             while True:
-        #                 fecha_liquidacion = input(">>> ")
-        #                 if len(fecha_liquidacion) == 10 and fecha_liquidacion[2] == '/' and fecha_liquidacion[5] == '/' and fecha_liquidacion[:2].isdigit() and fecha_liquidacion[3:5].isdigit() and fecha_liquidacion[6:].isdigit():
-        #                     fechaLq = fecha_liquidacion.split('/')
-        #                     listaAux = [int(el) for el in fechaLq]
-        #                     if listaAux[0] >= 1 and listaAux[0] <= 31 and listaAux[1] >= 1 and listaAux[1] <= 12 and listaAux[2] >= 1900 and listaAux[2] <= 2025:
-        #                         recibo['fecha_liquidacion'] = fecha_liquidacion
-        #                         print("Fecha de liquidación actualizada.")
-        #                         break
-        #                     else:
-        #                         print("Fecha no válida. Inténtelo nuevamente.")
-        #                 else:
-        #                     print("Formato incorrecto. Inténtelo nuevamente.")
-
-        #         else:
-        #             print("Opción no válida.")
-        #         return
-        
-        # print("No se encontró un recibo con ese ID.")
 
 def EliminarRecibo(listaRecibos: list) -> list:
     print("Bienvenido/a al asistente para eliminar recibos.")

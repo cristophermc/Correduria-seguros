@@ -235,7 +235,7 @@ if __name__=='__main__':
                             if not recibos:
                                 print("No hay recibos registrados para modificar.")
                             else:
-                                recibos=ModificarRecibo(recibos)
+                                recibos=ModificarRecibo(recibos, polizasRegistro)
                                 break
                         case '3':
                             if not recibos:
