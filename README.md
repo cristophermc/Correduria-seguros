@@ -36,3 +36,6 @@ pendiente la implementación de la validación de cada uno de los datos.
 2. Implementada la función de modificado de recibos. Se llama `ModificarRecibo()`.
 3. Se ha asegurado la condición de que `ModificarRecibo()` pueda modificar los `'id_recibo'`. 
 4. Se ha implementado correctamente la función de borrado de `EliminarRecibo()`. Cumple las condiciones lógicas necesarias para el correcto manejo de los datos internos.
+5. Se ha mejorado la creación de siniestros de `CrearSiniestro()`.
+6. Se ha implementado la opción de borrado de `EliminarSiniestro()`. 
+7. `Siniestros.py` está al día en materia de comprobaciones lógicas e interacciones con el usuario y la ecología del programa.
