@@ -1,11 +1,5 @@
 #Cristopher Méndez Cervantes | Ángel Cristo Castro Martín
 
-'''• No se permiten recibos con igual identificación
-• En la opción modificar no se permite cambiar el identificador del rec
-• A la hora de crear el recibo, la póliza a la que se quiere asociar debe estar 
-creada.
-• No se podrá eliminar una recibo que esté vigor (pendiente o cobrado).
-• Al borrar un recibo no hace falta borrar más nada asociado a la póliza'''
 id_recibo=0
 def CrearRecibo(id_recibo:int, banlist:list, polizas:list) -> list:
     lista = []
@@ -31,11 +25,6 @@ def CrearRecibo(id_recibo:int, banlist:list, polizas:list) -> list:
     if eleccion not in ID:
         print("No se ha seleccionado ninguna identificación asociada a una póliza. Volviendo al menú principal.")
         return None
-
-    # Verificar si la póliza ya tiene un recibo (está en la banlist)
-    # if eleccion in banlist:
-    #     print("Error. No se pueden crear recibos con un mismo identificador de póliza. Esta póliza ya fue utilizada para crear un recibo.")
-    #     return None
 
     # Continuar con la creación del recibo
     print("Cargando otros datos...")
@@ -117,12 +106,10 @@ def CrearRecibo(id_recibo:int, banlist:list, polizas:list) -> list:
     lista.append(dNroRecibo)
 
     # Actualizar banlist con la póliza utilizada
-    banlist.append(eleccion)
+    # banlist.append(eleccion)
 
     print(f"Recibo creado con identificador {id_recibo}")
     return lista
-
-
 def ModificarRecibo(lista_recibos: list, polizas:list) -> list:
     CAMPOS=[]
     nroPol=[]
@@ -307,11 +294,6 @@ def ModificarRecibo(lista_recibos: list, polizas:list) -> list:
                 else:
                     print("Error. El campo escrito no se encuentra entre las opciones disponibles.")
                     continue
-                
-
-
-
-
 def EliminarRecibo(listaRecibos: list) -> list:
     print("Bienvenido/a al asistente para eliminar recibos.")
     if not listaRecibos: #Comprobación de que la lista está vacía

@@ -20,6 +20,8 @@ from Siniestros import CrearSiniestro
 from Utilidades import RecogerBanlistPolizas
 from Utilidades import RecogerBanlistTomador
 from Utilidades import RecogerBanlistRecibo
+from Utilidades import NumSiniestro
+from Siniestros import EliminarSiniestro
 #espacio para definición de funciones internas del programa / rutinas necesarias para consolidar los datos
 
 def DetectarDatosCarga():
@@ -39,7 +41,7 @@ def DetectarDatosCarga():
      else:
           print("Archivos de guardado no encontrados en el sistema de archivos.\nProcediendo al normal funcionamiento del programa.")
           return None
-def GuardarDatos(polizasRegistro, recibos, tomador, numeradorPoliza, numeradorRecibo, banlistPolizas, banlistTomadores, banlistRecibos):  # MÁS PARÁMETROS EN UN FUTURO
+def GuardarDatos(polizasRegistro, recibos, tomador, numeradorPoliza, numeradorRecibo, banlistPolizas, banlistTomadores, banlistRecibos, numeradorSiniestro, siniestros):  # MÁS PARÁMETROS EN UN FUTURO
     # Definimos la ruta base del directorio
     ruta_datos = '../datos'
     ruta_archivo = os.path.join(ruta_datos, 'guardado.gcs')  # Ruta completa del archivo
@@ -49,7 +51,7 @@ def GuardarDatos(polizasRegistro, recibos, tomador, numeradorPoliza, numeradorRe
         print(f"Haciendo copia de seguridad de todos los datos en el sistema de ficheros en el directorio {ruta_datos}.")
 
         # Crear la lista de datos a guardar
-        lista = [polizasRegistro, recibos, tomador, numeradorPoliza, numeradorRecibo, banlistPolizas, banlistTomadores, banlistRecibos]
+        lista = [polizasRegistro, recibos, tomador, numeradorPoliza, numeradorRecibo, banlistPolizas, banlistTomadores, banlistRecibos, numeradorSiniestro, siniestros]
 
         # Guardar los datos en el archivo usando `with` para garantizar seguridad
         try:
@@ -72,7 +74,7 @@ if __name__=='__main__':
     os.chdir('./datos') #Cambiamos de directorio para controlar las entradas y salidas de datos / DIRECTORIO DE GUARDADO DE DATOS
     datos_cargados=DetectarDatosCarga() #Procedemos a la carga opcional de datos 
     if datos_cargados:
-        polizasRegistro, tomador, recibos, numeradorPoliza, numeradorRecibo, banlistPolizas, banlistTomadores, banlistRecibos = datos_cargados
+        polizasRegistro, tomador, recibos, numeradorPoliza, numeradorRecibo, banlistPolizas, banlistTomadores, banlistRecibos, numeradorSiniestro, siniestros = datos_cargados
 
 
     else:
@@ -256,8 +258,8 @@ if __name__=='__main__':
                     print("------------------")                    
                     print("Menú de siniestros")
                     print()
+                    print(siniestros)
                     print("1. Crear siniestro\n2. Modificar siniestro\n3. Eliminar siniestro\n4. Retorno a menú principal")
-                    print(f"Siniestros actuales > {siniestros}")
                     eleSiniestro=input("Haga su elección escribiendo el número que corresponde a cada una de las opciones >>> ")
                     match eleSiniestro:
                         case '1':
@@ -267,18 +269,16 @@ if __name__=='__main__':
                                 break
                             else:
                                 print("Continuando con el proceso de creación de siniestros...")
-                                for lista in polizasRegistro:
-                                        for sublista in lista:
-                                            if sublista['nro_poliza'] not in nrosPolizas:  # Verificar si ya existe
-                                                nrosPolizas.append(sublista['nro_poliza'])  # Solo añadir si no existe
+                                serial=''
                                 numeradorSiniestro=SerialSiniestro(numeradorSiniestro)
-                                nuevoSiniestro=CrearSiniestro(numeradorPoliza, nrosPolizas)
+                                serial=NumSiniestro(numeradorSiniestro)
+                                nuevoSiniestro=CrearSiniestro(serial, polizasRegistro)
                                 siniestros.append(nuevoSiniestro)
                         case '2':
                             print("En construcción. Saliendo al menú principal.")
                             break
                         case '3':
-                            print("En construcción. Saliendo al menú principal.")
+                            siniestros=EliminarSiniestro(siniestros)
                             break
                         case '4':
                             print("Volviendo al menú principal")
@@ -318,7 +318,7 @@ if __name__=='__main__':
                     print("Antes de guardar tenga en cuenta que sobreescribirá todos los registros anteriores existentes.")
                     continuarGuarda=input("¿Desea continuar de todos modos? s/n >>> ").lower()
                     if continuarGuarda=='s':
-                        GuardarDatos(polizasRegistro, tomador, recibos, numeradorPoliza, numeradorRecibo, banlistPolizas, banlistTomadores, banlistRecibos)
+                        GuardarDatos(polizasRegistro, tomador, recibos, numeradorPoliza, numeradorRecibo, banlistPolizas, banlistTomadores, banlistRecibos, numeradorSiniestro, siniestros)
                         break
                     elif continuarGuarda=='n':
                         print("Operación de guardado anulada. Volviendo al menú principal.")

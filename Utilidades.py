@@ -1,4 +1,5 @@
 #Cristopher Méndez Cervantes | Ángel Cristo Castro Martín
+import random
 def ValidarDocumento(documento:str) -> bool:
     documento=documento.upper()
     letras_dni = ['T', 'R', 'W', 'A', 'G', 'M', 'Y', 'F', 'P', 'D', 'X', 'B', 'N', 'J', 'Z', 'S', 'Q', 'V', 'H', 'L', 'C', 'K', 'E']
@@ -146,6 +147,20 @@ def RecogerBanlistRecibo(recibos: list) -> list:
             for subelto in elto:
                 banlist.append(subelto['nro_poliza']) 
     return banlist
+def NumSiniestro(numSiniestro:int) ->str: #Toma un nº de siniestro inicializado en 0 y cuando se pasa a la función de creación se modifica.
+    #aaaa-nro_correlativo
+    #ESTRUCTURA ANTES DEL -
+    letras='abcdefghijklmnñopqrstuvwxyz'
+    NumIDSiniestro=''
+    for i in range(4):
+        NumIDSiniestro+=random.choice(letras).upper()
+    NumIDSiniestro+='-'
+    NumIDSiniestro+=str(numSiniestro)
+    return NumIDSiniestro
+
+
+
+
 
 
 

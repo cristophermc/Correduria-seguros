@@ -35,3 +35,4 @@ pendiente la implementación de la validación de cada uno de los datos.
 1. Corregido un error que agregaba datos de tipo None en `Recibos.py`. 
 2. Implementada la función de modificado de recibos. Se llama `ModificarRecibo()`.
 3. Se ha asegurado la condición de que `ModificarRecibo()` pueda modificar los `'id_recibo'`. 
+4. Se ha implementado correctamente la función de borrado de `EliminarRecibo()`. Cumple las condiciones lógicas necesarias para el correcto manejo de los datos internos.
