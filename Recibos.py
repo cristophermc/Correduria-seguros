@@ -23,7 +23,7 @@ def CrearRecibo(id_recibo:int, banlist:list, polizas:list) -> list:
     print()
     try:
         eleccion = int(input("Seleccione un número de póliza >>> "))
-    except ValueError:
+    except:
         print("Error. Introduzca un número válido.")
         return None
 
@@ -33,9 +33,9 @@ def CrearRecibo(id_recibo:int, banlist:list, polizas:list) -> list:
         return None
 
     # Verificar si la póliza ya tiene un recibo (está en la banlist)
-    if eleccion in banlist:
-        print("Error. No se pueden crear recibos con un mismo identificador de póliza. Esta póliza ya fue utilizada para crear un recibo.")
-        return None
+    # if eleccion in banlist:
+    #     print("Error. No se pueden crear recibos con un mismo identificador de póliza. Esta póliza ya fue utilizada para crear un recibo.")
+    #     return None
 
     # Continuar con la creación del recibo
     print("Cargando otros datos...")
@@ -127,6 +127,7 @@ def ModificarRecibo(lista_recibos: list, polizas:list) -> list:
     CAMPOS=[]
     nroPol=[]
     duraciones = ('A', 'S', 'T', 'M')
+    estadosrecibos = ['P', 'PB', 'C', 'CB', 'B']
 
     #Se tienen que desempaquetar las claves primeramente para que podamos sacar dos colecciones:
     #Colección A: campos=[] - lista con los campos de cada uno de los recibos - En el contexto de nuestra aplicación lo usamos como verificador cuando el usuario trata de acceder a los datos
@@ -244,6 +245,8 @@ def ModificarRecibo(lista_recibos: list, polizas:list) -> list:
                                     for subelto in elto:
                                         if subelto['id_recibo']==seleccionarID:
                                             subelto['importe_cobrar']=cambioImporte
+                                            print("Importe cambiado.")
+                                            return lista_recibos
                             else:
                                 print("Error. El importe debe ser superior a 0.")
                                 continue
@@ -273,6 +276,29 @@ def ModificarRecibo(lista_recibos: list, polizas:list) -> list:
                                     return lista_recibos
                             else:
                                 print("Error. La fecha de cobro introducida no es válida. Por favor, introduzca una fecha en el formato DD/MM/AAAA.")
+                                continue
+                        case 'estado_recibo':
+                            print("Antiguo estado del recibo: ")
+                            for elto in lista_recibos:
+                                for subelto in elto:
+                                    if subelto['id_recibo']==seleccionarID:
+                                        print(subelto['estado_recibo'])
+                                    else:
+                                        print("No hay estados registrados para este recibo.")
+                                        continue
+                            cambioEstado=input(f"Introduzca un nuevo estado entre los siguientes {estadosrecibos}: ")
+                            if cambioEstado in estadosrecibos:
+                                for elto in lista_recibos:
+                                    for subelto in elto:
+                                        if subelto['id_recibo']==seleccionarID:
+                                            subelto['estado_recibo']=cambioEstado
+                                            print("Estado cambiado.\nRecibo modificado.")
+                                            return lista_recibos
+                                        else:
+                                             print("No se ha encontrado el recibo con ese ID.")
+                                             continue
+                            else:
+                                print("El cambio sugerido no se encuentra entre las opciones disponibles.")
                                 continue
 
 

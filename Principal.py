@@ -3,9 +3,7 @@
 #espacio para modulación // librerías
 import pickle
 import os
-import Polizas
-import Tomadores
-import Recibos
+from rich import print
 from Polizas import EliminarPoliza
 from Polizas import ModificarPoliza
 from Polizas import CrearPoliza
@@ -91,7 +89,7 @@ if __name__=='__main__':
         banlistRecibos=[]
     while True:
         print("----------------------------------------")
-        print("Correduría Mi Coche Asegurado")
+        print("[bold red]Correduría Mi Coche Asegurado[/bold red]")
         print()
         print("Menú Principal")
         print("...")
@@ -115,7 +113,7 @@ if __name__=='__main__':
                                 break
                             else:
                                 numeradorPoliza=SerialPoliza(numeradorPoliza)
-                                nuevaPoliza=Polizas.CrearPoliza(numeradorPoliza, tomador, banlistPolizas)
+                                nuevaPoliza=CrearPoliza(numeradorPoliza, tomador, banlistPolizas)
                                 polizasRegistro.append(nuevaPoliza)
                                 banlistPolizas=RecogerBanlistPolizas(polizasRegistro)
                                 break
@@ -223,11 +221,15 @@ if __name__=='__main__':
                                 print("Error. Aún no hay pólizas registradas. Primeramente deberá existir una póliza en el registro para poder crear un recibo asociado. Volviendo al menú principal.")
                                 break
                             elif polizasRegistro:
-                                numeradorRecibo = SerialRecibo(numeradorRecibo) #No es del todo seriado
+                                numeradorRecibo = SerialRecibo(numeradorRecibo) 
                                 nuevoRecibo = CrearRecibo(numeradorRecibo, banlistRecibos, polizasRegistro)
-                                recibos.append(nuevoRecibo)
-                                banlistRecibos=RecogerBanlistRecibo(recibos)
-                                break
+                                if nuevoRecibo is None:
+                                    print("Volviendo al menú principal.")
+                                    break
+                                else:
+                                    recibos.append(nuevoRecibo)
+                                    banlistRecibos=RecogerBanlistRecibo(recibos)
+                                    break
                         case '2':
                             if not polizasRegistro:
                                 print("No hay pólizas registradas sobre las cuales se tengan recibos asociados.")
