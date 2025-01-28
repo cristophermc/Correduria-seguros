@@ -88,7 +88,7 @@ if __name__=='__main__':
         banlistRecibos=[]
     while True:
         print("----------------------------------------")
-        print("Correduría Mi Coche Asegurado")
+        print("\033[31mCorreduría 'Mi Coche Asegurado'.\033[0m")
         print()
         print("Menú Principal")
         print("...")
