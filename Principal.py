@@ -3,7 +3,6 @@
 #espacio para modulación // librerías
 import pickle
 import os
-from rich import print
 from Polizas import EliminarPoliza
 from Polizas import ModificarPoliza
 from Polizas import CrearPoliza
@@ -89,7 +88,7 @@ if __name__=='__main__':
         banlistRecibos=[]
     while True:
         print("----------------------------------------")
-        print("[bold red]Correduría Mi Coche Asegurado[/bold red]")
+        print("Correduría Mi Coche Asegurado")
         print()
         print("Menú Principal")
         print("...")
