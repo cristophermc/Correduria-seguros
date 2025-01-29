@@ -170,6 +170,28 @@ def CrearSiniestro(id_siniestro: str, polizas:list) -> list:
                                     print(f"Siniestro creado para el nº de póliza {eleccion} con identificador {id_siniestro}")
                                     lista.append(dSiniestro)
                                     return lista
+def ModificarSiniestro(siniestros:list) -> list:
+    #barrer toda la lista de siniestros, comprobar que el id introducido sea igual que el del usuario y modificar según lo barrido:
+    ID=[]
+    CAMPOS=[]
+    if not siniestros:
+        print("Error. Debe existir al menos un siniestro para poder proceder a su modificación.")
+        return siniestros
+    print("Estos son los identificadores asociados a los siniestros que existen: ")                    
+    for elto in siniestros:
+        for subelto in elto:
+            print(f"id_siniestro: {subelto['id_siniestro']}")
+            ID.append(subelto['id_siniestro'])
+    print()
+    modificar=input("Escriba uno de los identificadores listados >>> ")
+    if modificar in ID:
+        #Modificamos los datos según el que hemos introducido como usuarios
+        for elto in siniestros:
+            for subelto in elto:
+                if subelto['id_siniestro']==modificar:#Nos metemos dentro del seleccionado
+                 pass
+
+
 def EliminarSiniestro(siniestros:list)->list:
     #Barrer la lista de siniestros que hay y comprobar:
     '''No se puede eliminar un siniestro vigente, 
