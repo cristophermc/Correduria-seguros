@@ -177,6 +177,11 @@ def ModificarSiniestro(siniestros:list) -> list:
     if not siniestros:
         print("Error. Debe existir al menos un siniestro para poder proceder a su modificación.")
         return siniestros
+    for elto in siniestros: #nos creamos CAMPOS para identificar y cotejar los datos más rapidamente y de forma segura
+        for subelto in elto:
+            for clave in subelto.keys():
+                if clave!='id_siniestro' and clave not in CAMPOS:
+                    CAMPOS.append(clave)
     print("Estos son los identificadores asociados a los siniestros que existen: ")                    
     for elto in siniestros:
         for subelto in elto:
@@ -185,11 +190,202 @@ def ModificarSiniestro(siniestros:list) -> list:
     print()
     modificar=input("Escriba uno de los identificadores listados >>> ")
     if modificar in ID:
+        print(f"Se ha seleccionado el ID: {modificar}")
+        while True:
+            print("Campos disponibles a seleccionar:")
+            for elto in CAMPOS:
+                print(f"- {elto}", end=' ')
+                print()
+            campo=input("Seleccione uno de los campos a continuación: ")
+            if campo in CAMPOS: #Si la elección se encuentra en uno de los campos: 
+                match campo:
+                    case 'nro_poliza': #PREGUNTAR A REINALDO SI ESTO SE PUEDE HACER Y COMO IMPLEMENTARLO
+                        pass
+                    case 'descripcion':
+                        while True:
+                            for elto in siniestros:
+                                for subelto in elto:
+                                    if subelto['id_siniestro']==modificar:
+                                        print(f"Esta es la descripción anterior\n\n{subelto['descripcion']}")
+                            nuevaDescripcion=input("Escriba una nueva descripcion >>> ")
+                            if nuevaDescripcion != '':
+                                for elto in siniestros:
+                                    for subelto in elto:
+                                        if subelto['id_siniestro']==modificar:
+                                            subelto['descripcion']=nuevaDescripcion
+                                            print("Descripción modificada.")
+                                            return siniestros
+                            else:
+                                print("La descripción no puede estar vacía. Por favor, introduzca una descripción nuevamente.")
+                    case 'matricula_contrario':
+                        while True:
+                            for elto in siniestros:
+                                for subelto in elto:
+                                    if subelto['id_siniestro']==modificar:
+                                        print(f"Esta es la matrícula del vehículo contrario anterior\n\n{subelto['matricula_contrario']}")
+                            nuevaMatriculaContrario=input("Introduzca una nueva matrícula del contrario >>> ")
+                            if ComprobarMatricula(nuevaMatriculaContrario):
+                                for elto in siniestros:
+                                    for subelto in elto:
+                                        if subelto['id_siniestro']==modificar:
+                                            subelto['matricula_contrario']=nuevaMatriculaContrario
+                                            print("Matrícula modificada.")
+                                            return siniestros
+                            else:
+                                print("Esa matrícula no es válida. Introduzca otra.")
+                                continue
+                                        
+                    case 'compañia_contrario':
+                        while True:
+                            for elto in siniestros:
+                                for subelto in elto:
+                                    if subelto['id_siniestro']==modificar:
+                                        print(f"Esta es la compañía del vehículo contrario anterior\n\n{subelto['compañia_contrario']}")
+                            nuevaCompañia=input("Introduzca una nueva compañia >>> ")
+                            if nuevaCompañia != '':
+                                for elto in siniestros:
+                                    for subelto in elto:
+                                        if subelto['id_siniestro']==modificar:
+                                            subelto['compañia_contrario']=nuevaCompañia
+                                            print("Compañia contraria modificada.")
+                                            return siniestros
+                            else:
+                                print("La compañia no puede quedar vacía.")
+                                continue
+                    case 'nro_poliza_contrario':
+                        while True:
+                            for elto in siniestros:
+                                for subelto in elto:
+                                    if subelto['id_siniestro']==modificar:
+                                        print(f"Esta es el numero de poliza contrario anterior\n\n{subelto['nro_poliza_contrario']}")
+                            try:
+                                nuevoNumeroPoliza= int(input("Introduzca un nuevo numero de poliza >>> "))
+                            except:
+                                print("Error. El número de póliza debe ser un valor numérico.")
+                            else:
+                                for elto in siniestros:
+                                    for subelto in elto:
+                                        if subelto['id_siniestro']==modificar:
+                                            subelto['nro_poliza_contrario']=nuevoNumeroPoliza
+                                            print("Poliza contraria modificada.")
+                                            return siniestros                                
+                    case 'importe_pagar':
+                        while True:
+                            for elto in siniestros:
+                                for subelto in elto:
+                                    if subelto['id_siniestro']==modificar:
+                                        print(f"Esta es el importe a pagar anterior\n\n{subelto['nro_poliza_contrario']}")
+                            try:
+                                nuevoImportePagar= float(input("Introduzca un nuevo importe a pagar >>> "))
+                            except:
+                                print("Error. El importe a pagar debe ser un valor numérico.")
+                            else:
+                                if nuevoImportePagar>0 and nuevoImportePagar <10000000:
+                                    for elto in siniestros:
+                                        for subelto in elto:
+                                            if subelto['id_siniestro']==modificar:
+                                                subelto['importe_pagar']=nuevoImportePagar
+                                                print("Importe a pagar modificado.")
+                                                return siniestros
+                                else:
+                                    print("Error. El importe a pagar debe estar entre 0 y 10000000 sin incluir ambos.")                                
+                    case 'estado_siniestro':
+                        while True:
+                            for elto in siniestros:
+                                for subelto in elto:
+                                    if subelto['id_siniestro']==modificar:
+                                        print(f"Esta es el estado del siniestro anterior\n\n{subelto['estado_siniestro']}")
+                            estados=('P', 'C', 'PP', 'PA')
+                            nuevoEstadoSin=input(f"Introduzca un nuevo estado entre: {estados} >>> ").upper()
+                            if nuevoEstadoSin != '':
+                                if nuevoEstadoSin in estados:
+                                    for elto in siniestros:
+                                        for subelto in elto:
+                                            if subelto['id_siniestro']==modificar:
+                                                subelto['estado_siniestro']=nuevoEstadoSin
+                                                print("Estado del siniestro modificado.")
+                                                return siniestros
+                                else:
+                                    print("La selección debe estar entre las opciones cotejadas.")
+                            else:
+                                print("La información del estado no puede estar vacía.")
+                                continue
+                    case 'fecha_abono':
+                      while True:
+                        for elto in siniestros:
+                            for subelto in elto:
+                                if subelto['id_siniestro']==modificar:
+                                    print(f"Esta es la antigua fecha de abono {subelto['fecha_abono']}")
+                        nueva_fecha_abono=input("Detalle la nueva fecha de abono en el siguiente formato (DD/MM/AAAA) >>> ")
+                        if len(nueva_fecha_abono)==10 and nueva_fecha_abono[2]=='/' and nueva_fecha_abono[5]=='/' and nueva_fecha_abono[:2].isdigit() and nueva_fecha_abono[3:5].isdigit() and nueva_fecha_abono[6:].isdigit():
+                            fechaAb=nueva_fecha_abono.split('/')
+                            listaAux=[]
+                            for elto in fechaAb:
+                                elto=int(elto)
+                                listaAux.append(elto)
+                                if listaAux[0]>=1 and listaAux[0]<=31 and listaAux[1]>=1 and listaAux[1]<=12 and listaAux[2]>=1900 and listaAux[2]<=2025:
+                                    print("Fecha de liquidación válida. Registrando...")
+                                    for elto in siniestros:
+                                        for subelto in elto:
+                                            if elto['id_siniestro']==modificar:
+                                                elto['fecha_abono']=nueva_fecha_abono
+                                                print("Fecha de abono modificada.")
+                                                return siniestros
+            
+                        else:
+                            print("Error. La fecha de abono no es válida. Por favor, introduzca una fecha en el formato DD/MM/AAAA.")
+                            continue  
+                    case 'estado_liquidacion':
+                        for elto in siniestros:
+                                for subelto in elto:
+                                    if subelto['id_siniestro']==modificar:
+                                        print(f"Esta es el estado de la liquidacion anterior\n\n{subelto['estado_liquidacion']}")
+                        estadosLiquidacion=('P','L')
+                        while True:
+                            print("Un siniestro puede estar a su vez en dos estados más:\n• Pendiente (P): El siniestro no ha sido abonado a la compañía aseguradora.\n• Liquidado (L): El recibo ha sido abonado o dado de baja a la compañía.")
+                            print(f"Introduzca la letra que corresponde al estado de liquidación del siniestro - |AYUDA| {estadosLiquidacion}")
+                            nuevo_estado_liquidacion=input(">>> ")
+                            if nuevo_estado_liquidacion in estadosLiquidacion:
+                                print("Datos introducidos correctamente en el sistema.")
+                                for elto in siniestros:
+                                    for subelto in elto:
+                                        if subelto['id_siniestro']==modificar:
+                                            subelto['estado_liquidacion'] = nuevo_estado_liquidacion
+                            
+                            else:
+                                print("Error. Introduzca correctamente los datos con el formato específico.")
+                    case 'fecha_liquidacion':
+                        while True:
+                            for elto in siniestros:
+                                for subelto in elto:
+                                    if subelto['id_siniestro']==modificar:
+                                        print(f"Esta es la antigua fecha de liquidacion {subelto['fecha_liquidacion']}")
+                            nueva_fecha_liq=input("Detalle la nueva fecha de liquidacion en el siguiente formato (DD/MM/AAAA) >>> ")
+                            if len(nueva_fecha_liq)==10 and nueva_fecha_liq[2]=='/' and nueva_fecha_liq[5]=='/' and nueva_fecha_liq[:2].isdigit() and nueva_fecha_liq[3:5].isdigit() and nueva_fecha_liq[6:].isdigit():
+                                fechaLq=nueva_fecha_liq.split('/')
+                                listaAux=[]
+                                for elto in fechaLq:
+                                    elto=int(elto)
+                                    listaAux.append(elto)
+                                    if listaAux[0]>=1 and listaAux[0]<=31 and listaAux[1]>=1 and listaAux[1]<=12 and listaAux[2]>=1900 and listaAux[2]<=2025:
+                                        print("Fecha de liquidación válida. Registrando...")
+                                        for elto in siniestros:
+                                            for subelto in elto:
+                                                if elto['id_siniestro']==modificar:
+                                                    elto['fecha_liquidacion']=nueva_fecha_liq
+                                                    print("Fecha de liquidación modificada.")
+                                                    return siniestros
+                                    else:
+                                        print("Error en el formato.")
+                            else:
+                                print("Error en el formato.")
+
         #Modificamos los datos según el que hemos introducido como usuarios
-        for elto in siniestros:
-            for subelto in elto:
-                if subelto['id_siniestro']==modificar:#Nos metemos dentro del seleccionado
-                 pass
+        # for elto in siniestros:
+        #     for subelto in elto:
+        #         if subelto['id_siniestro'] == modificar:#Nos metemos dentro del seleccionado
+        #             pass
+                 
 
 
 def EliminarSiniestro(siniestros:list)->list:

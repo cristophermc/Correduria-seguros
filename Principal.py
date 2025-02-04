@@ -22,6 +22,7 @@ from Utilidades import RecogerBanlistTomador
 from Utilidades import RecogerBanlistRecibo
 from Utilidades import NumSiniestro
 from Siniestros import EliminarSiniestro
+from Siniestros import ModificarSiniestro
 #espacio para definición de funciones internas del programa / rutinas necesarias para consolidar los datos
 
 def DetectarDatosCarga():
@@ -275,7 +276,7 @@ if __name__=='__main__':
                                 nuevoSiniestro=CrearSiniestro(serial, polizasRegistro)
                                 siniestros.append(nuevoSiniestro)
                         case '2':
-                            print("En construcción. Saliendo al menú principal.")
+                            siniestros=ModificarSiniestro(siniestros)
                             break
                         case '3':
                             siniestros=EliminarSiniestro(siniestros)
