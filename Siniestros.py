@@ -1,8 +1,4 @@
 #Cristopher Méndez Cervantes | Ángel Cristo Castro Martín
-
-
-##Teniendo en cuenta que deben de existir las pólizas para trabajar con los siniestros, primeramente el usuario se verá forzado a al menos introducir
-#una póliza en el sistema.
 from Utilidades import ComprobarMatricula
 def CrearSiniestro(id_siniestro: str, polizas:list) -> list:
     lista=[]
@@ -385,9 +381,6 @@ def ModificarSiniestro(siniestros:list) -> list:
         #     for subelto in elto:
         #         if subelto['id_siniestro'] == modificar:#Nos metemos dentro del seleccionado
         #             pass
-                 
-
-
 def EliminarSiniestro(siniestros:list)->list:
     #Barrer la lista de siniestros que hay y comprobar:
     '''No se puede eliminar un siniestro vigente, 
