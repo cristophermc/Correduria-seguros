@@ -23,6 +23,8 @@ from Utilidades import RecogerBanlistRecibo
 from Utilidades import NumSiniestro
 from Siniestros import EliminarSiniestro
 from Siniestros import ModificarSiniestro
+from Utilidades import NumLiquidaciones
+from Liquidaciones import CrearLiquidacion
 #espacio para definición de funciones internas del programa / rutinas necesarias para consolidar los datos
 
 def DetectarDatosCarga():
@@ -89,6 +91,8 @@ if __name__=='__main__':
         banlistPolizas=[]
         banlistTomadores=[]
         banlistRecibos=[]
+        numeradorLiquidaciones=0
+        liquidaciones=[]
     while True:
         print("----------------------------------------")
         print("\033[31mCorreduría 'Mi Coche Asegurado'.\033[0m")
@@ -261,8 +265,8 @@ if __name__=='__main__':
                     print()
                     print(siniestros)
                     print("1. Crear siniestro\n2. Modificar siniestro\n3. Eliminar siniestro\n4. Retorno a menú principal")
-                    eleSiniestro=input("Haga su elección escribiendo el número que corresponde a cada una de las opciones >>> ")
-                    match eleSiniestro:
+                    eleLiquidacion=input("Haga su elección escribiendo el número que corresponde a cada una de las opciones >>> ")
+                    match eleLiquidacion:
                         case '1':
                             print("Asistente de creación de siniestros.")
                             if not polizasRegistro:
@@ -288,7 +292,41 @@ if __name__=='__main__':
                             print("Error. Seleccione una de las opciones numéricas.")
 
             case '5':
-                pass
+                while True:
+                    print("------------------")                    
+                    print("Menú de liquidaciones")
+                    print()
+                    print(liquidaciones)
+                    print("1. Generar liquidación\n2. Modificar liquidación\n3. Eliminar liquidación\n4. Retorno a menú principal")
+                    eleLiquidacion=input("Haga su elección escribiendo el número que corresponde a cada una de las opciones >>> ")
+                    match eleLiquidacion:
+                        case '1':
+                            print("Asistente de generación de liquidaciones.")
+                            if siniestros and recibos:
+                                numeradorLiquidaciones=NumLiquidaciones(numeradorLiquidaciones)
+                                nuevaLiquidacion=CrearLiquidacion(recibos, siniestros, numeradorLiquidaciones)
+                                liquidaciones.append(nuevaLiquidacion)
+                            if not siniestros and not recibos:
+                                print("No hay registros de siniestros ni recibos. Volviendo al menú principal.")
+                                break
+                            if siniestros and not recibos:
+                                print("Hay registros de siniestros pero no hay registros de recibos.\nCree un recibo para poder formalizar una liquidación.")
+                                break
+                            if not siniestros and recibos:
+                                print("No hay siniestros registrados.\nFormalice primero un siniestro.")
+                                break
+                        case '2':
+                            pass
+                            break
+                        case '3':
+                            pass
+                            break
+                        case '4':
+                            print("Volviendo al menú principal")
+                            break
+                        case _:
+                            print("Error. Seleccione una de las opciones numéricas.")
+                    
             case '6':
                 while True:
                     print("Menú de estadísticas\n\n1. Ver estadísticas de pólizas.\n2. Ver estadísticas de liquidaciones.\n3. Retorno al menú principal.")

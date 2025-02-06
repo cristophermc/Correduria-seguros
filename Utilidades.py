@@ -157,6 +157,9 @@ def NumSiniestro(numSiniestro:int) ->str: #Toma un nº de siniestro inicializado
     NumIDSiniestro+='-'
     NumIDSiniestro+=str(numSiniestro)
     return NumIDSiniestro
+def NumLiquidaciones(numeradorLiquidaciones:int)->int:
+    numeradorLiquidaciones+=1
+    return numeradorLiquidaciones
 
 
 
