@@ -46,27 +46,33 @@ importe_liquidacion: Una tupla con la siguiente información ( (1) - (3), (2) ).
 primer campo es la resta de lo marcado como (1) menos el importe de lo marcado
 como (3), el segundo campo es el valor marcado como (2).'''
 
+#Es el año actual el que se pone en la fecha
 
 
 
-
-def CrearLiquidacion(recibos:list, siniestros:list, serial:str)->list:
+def CrearLiquidacion(recibos:list, siniestros:list, serial:int)->list:
+    recibos
+    siniestros
+    serial
     while True:
-        fecha_liquidacion=input("Detalle la fecha de liquidación en el siguiente formato (DD/MM/AAAA) >>> ")
+        fecha_liquidacion=input("Detalle la fecha de liquidación en el siguiente formato (DD/MM/AAAA) en el año 2025>>> ")
         if len(fecha_liquidacion)==10 and fecha_liquidacion[2]=='/' and fecha_liquidacion[5]=='/' and fecha_liquidacion[:2].isdigit() and fecha_liquidacion[3:5].isdigit() and fecha_liquidacion[6:].isdigit():
             fechaLiq=fecha_liquidacion.split('/')
             listaAux=[]
             for elto in fechaLiq:
                 elto=int(elto)
                 listaAux.append(elto)
-            if listaAux[0]>=1 and listaAux[0]<=31 and listaAux[1]>=1 and listaAux[1]<=12 and listaAux[2]>=1900 and listaAux[2]<=2006:
+            if listaAux[0]>=1 and listaAux[0]<=31 and listaAux[1]>=1 and listaAux[1]<=12 and listaAux[2]==2025:
                 print("Fecha de liquidación válida. Registrando...")
                 break
         else:
             print("Error. La fecha de nacimiento introducida no es válida. Por favor, introduzca una fecha en el formato DD/MM/AAAA.")
             continue
-    while True:
-        pass
+    #generación seriada:
+    nro_liquidacion=fecha_liquidacion[6:]+'-'+str(serial) #se coge del programa principal el seriado incrementado y se añade al año de la liquidación
+    estado_liquidacion='Abierta'
+    importe_recibos_cobrados=0 #inicialización a 0 y vamos a barrer en breves
+    
 
 
     # Calculamos el importe de la liquidación:
@@ -78,8 +84,8 @@ def CrearLiquidacion(recibos:list, siniestros:list, serial:str)->list:
     liquidacion = {
         "nro_liquidacion": nro_liquidacion,
         "fecha_liquidacion": fecha_liquidacion,
-        "estado_liquidacion": "Abierta",  # Estado inicial de la liquidación
-        "importe_recibos_cobrados": total_recibos_cobrados,
+        "estado_liquidacion": estado_liquidacion,  # Estado inicial de la liquidación
+        "importe_recibos_cobrados": importe_recibos_cobrados, #BARRIDO DE 
         "lista_recibos_liquidar": lista_recibos_liquidar,
         "importe_recibos_baja": total_recibos_baja,
         "lista_recibos_baja": lista_recibos_baja,
