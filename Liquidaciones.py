@@ -80,26 +80,26 @@ def CrearLiquidacion(recibos:list, siniestros:list, serial:int)->list:
 
     
 
-'''- Se barre la lista de recibos y se cogen todos los recibos que se han cobrado
-por la agencia y que no se han liquidado a la compañía de seguros. Se
-totaliza la cantidad de dinero que se debería pagar a la compañía por este
-concepto.'''
-    # Calculamos el importe de la liquidación:
-    # - Primer valor: total de recibos cobrados menos total de siniestros pagados.
-    # - Segundo valor: total de recibos dados de baja.
-importe_liquidacion = (total_recibos_cobrados - total_siniestros_pagados, total_recibos_baja)
+# '''- Se barre la lista de recibos y se cogen todos los recibos que se han cobrado
+# por la agencia y que no se han liquidado a la compañía de seguros. Se
+# totaliza la cantidad de dinero que se debería pagar a la compañía por este
+# concepto.'''
+#     # Calculamos el importe de la liquidación:
+#     # - Primer valor: total de recibos cobrados menos total de siniestros pagados.
+#     # - Segundo valor: total de recibos dados de baja.
+# importe_liquidacion = (total_recibos_cobrados - total_siniestros_pagados, total_recibos_baja)
 
-    # Creamos un diccionario con la información de la liquidación
-    liquidacion = {
-        "nro_liquidacion": nro_liquidacion,
-        "fecha_liquidacion": fecha_liquidacion,
-        "estado_liquidacion": estado_liquidacion,  # Estado inicial de la liquidación
-        "importe_recibos_cobrados": importe_recibos_cobrados, #BARRIDO DE 
-        "lista_recibos_liquidar": lista_recibos_liquidar,
-        "importe_recibos_baja": total_recibos_baja,
-        "lista_recibos_baja": lista_recibos_baja,
-        "importe_siniestros_pagados": total_siniestros_pagados,
-        "lista_siniestros_liquidados": lista_siniestros_liquidados,
-        "importe_liquidacion": importe_liquidacion,
-    }
-    return liquidacion
+#     # Creamos un diccionario con la información de la liquidación
+#     liquidacion = {
+#         "nro_liquidacion": nro_liquidacion,
+#         "fecha_liquidacion": fecha_liquidacion,
+#         "estado_liquidacion": estado_liquidacion,  # Estado inicial de la liquidación
+#         "importe_recibos_cobrados": importe_recibos_cobrados, #BARRIDO DE 
+#         "lista_recibos_liquidar": lista_recibos_liquidar,
+#         "importe_recibos_baja": total_recibos_baja,
+#         "lista_recibos_baja": lista_recibos_baja,
+#         "importe_siniestros_pagados": total_siniestros_pagados,
+#         "lista_siniestros_liquidados": lista_siniestros_liquidados,
+#         "importe_liquidacion": importe_liquidacion,
+#     }
+#     return liquidacion
