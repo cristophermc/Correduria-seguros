@@ -18,7 +18,7 @@ baja y que no se han descontado a la compañía de seguros. Se totaliza la
 cantidad de dinero que ya no debemos enviar a la compañía.
 - Se rellenan el resto de campos con los cálculos explicados al comienzo, a
 excepción del campo estado.
-- Cerrar una liquidación lo que hace es cambiar de estado a una liquidación
+- Cerrar una liqui    dación lo que hace es cambiar de estado a una liquidación
 abierta existente.'''
 #Estructura de datos
 '''Liquidaciones: es la estructura que contiene los datos de las liquidaciones
@@ -72,13 +72,22 @@ def CrearLiquidacion(recibos:list, siniestros:list, serial:int)->list:
     nro_liquidacion=fecha_liquidacion[6:]+'-'+str(serial) #se coge del programa principal el seriado incrementado y se añade al año de la liquidación
     estado_liquidacion='Abierta'
     importe_recibos_cobrados=0 #inicialización a 0 y vamos a barrer en breves
+    for elto in recibos: #entiendo que para barrer en busca de cobrados hay que moverse por recibos
+        for subelto in elto:
+            if subelto['estado_recibo']=='C':
+                importe_recibos_cobrados+=subelto['importe_cobrar']
+    pass
+
     
 
-
+'''- Se barre la lista de recibos y se cogen todos los recibos que se han cobrado
+por la agencia y que no se han liquidado a la compañía de seguros. Se
+totaliza la cantidad de dinero que se debería pagar a la compañía por este
+concepto.'''
     # Calculamos el importe de la liquidación:
     # - Primer valor: total de recibos cobrados menos total de siniestros pagados.
     # - Segundo valor: total de recibos dados de baja.
-    importe_liquidacion = (total_recibos_cobrados - total_siniestros_pagados, total_recibos_baja)
+importe_liquidacion = (total_recibos_cobrados - total_siniestros_pagados, total_recibos_baja)
 
     # Creamos un diccionario con la información de la liquidación
     liquidacion = {
