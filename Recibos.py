@@ -158,7 +158,7 @@ def ModificarRecibo(lista_recibos: list, polizas:list) -> list:
     nroPol=[]
     duraciones = ('A', 'S', 'T', 'M')
     estadosrecibos = ['P', 'PB', 'C', 'CB', 'B']
-    estadosliquidacion=['L', 'P']
+    estadosliquidacion=['Liquidado', 'Pendiente']
 
     #Se tienen que desempaquetar las claves primeramente para que podamos sacar dos colecciones:
     #Colección A: campos=[] - lista con los campos de cada uno de los recibos - En el contexto de nuestra aplicación lo usamos como verificador cuando el usuario trata de acceder a los datos
@@ -336,7 +336,7 @@ def ModificarRecibo(lista_recibos: list, polizas:list) -> list:
                             print("Antiguo importe a pagar:")
                             for elto in lista_recibos:
                                 for subelto in elto:
-                                    if subelto['importe_pagar']==seleccionarID:
+                                    if subelto['id_recibo']==seleccionarID:
                                         print(subelto['importe_pagar'])
                                     else:
                                         print("No hay importes a pagar para este recibo.")
@@ -347,7 +347,7 @@ def ModificarRecibo(lista_recibos: list, polizas:list) -> list:
                                 for elto in lista_recibos:
                                     for subelto in elto:
                                         if subelto['id_recibo']==seleccionarID:
-                                            subelto['importe_pagar']=cambioImporte
+                                            subelto['importe_pagar']=cambioImportePagar
                                             print("Importe a pagar cambiado.")
                                             return lista_recibos
                             else:
