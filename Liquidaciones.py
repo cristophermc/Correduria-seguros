@@ -74,7 +74,7 @@ def CrearLiquidacion(recibos:list, siniestros:list, serial:int)->list:
     importe_recibos_cobrados=0 #inicialización a 0 y vamos a barrer en breves
     for elto in recibos: #entiendo que para barrer en busca de cobrados hay que moverse por recibos
         for subelto in elto:
-            if subelto['estado_recibo']=='C':
+            if subelto['estado_recibo']=='C' and subelto['estado_liquidacion']=='Liquidado':
                 importe_recibos_cobrados+=subelto['importe_cobrar']
     pass
 
