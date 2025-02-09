@@ -110,7 +110,7 @@ def CrearLiquidacion(recibos:list, siniestros:list, serial:int)->list:
                 elementos_siniestros_liquidar=(subelto['nro_poliza'], subelto['id_siniestro'])
                 lista_siniestros_pagados.append(elementos_siniestros_liquidar)
     #CALCULO DE LIQUIDACION ( (1) - (3), (2) )
-    importe_liquidacion=((importe_recibos_cobrados-importe_siniestros_pagados), importe_recibos_baja)
+    importe_liquidacion=((importe_recibos_cobrados-importe_siniestros_pagados), importe_recibos_baja) 
     dLiquidacion={'nro_liquidacion': nro_liquidacion,
                   'fecha_liquidacion': fecha_liquidacion,
                   'estado_liquidacion': estado_liquidacion,
@@ -128,3 +128,24 @@ def CrearLiquidacion(recibos:list, siniestros:list, serial:int)->list:
 
 ##El siguiente paso ahora es cerrar la liquidación, lo que significa mandar un mensaje al usuario para que confirme y, además, 
 #se debe hacer antes del return
+
+def CerrarLiquidacion(recibos:list, siniestros:list, liquidaciones:list)->list:
+    while True:
+        for elto in liquidacion:
+            for subelto in elto:
+                for clave, valor in subelto.items():
+                    print(f"- {clave}: {valor}")
+        confirmar=input("¿Son estos datos correctos? Se va a proceder al cierre de la liquidación. Escriba s/n >>> ").lower()
+        if confirmar == 's':
+            print("Cerrando la liquidación.\nCambiando los estados de los recibos y los siniestros implicados...")
+            for elto in recibos:
+                for subelto in elto:
+                    if (subelto['estado_recibo']=='C' or subelto['estado_recibo'=='CB'] or subelto['estado_recibo']=='B') and subelto['estado_liquidacion']=='Pendiente':
+                        subelto['estado_liquidacion']='Liquidado'
+            for elto in siniestros:
+                for subelto in elto:
+                    if subelto['estado_siniestro']=='PA' and subelto['estado_liquidacion']=='P':
+                        subelto['estado_liquidacion']=='L'
+            
+            liquidacion=[]
+            print("Todos los estados modificados.\nLiquidación cerrada correctamente.")

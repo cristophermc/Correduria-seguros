@@ -9,7 +9,8 @@ from Polizas import CrearPoliza
 from Tomadores import CrearTomador
 from Tomadores import EliminarTomador
 from Tomadores import ModificarTomador
-from Estadisticas import MostrarEstadisticaPolizas
+from Estadisticas import estadisticasPolizas
+from Estadisticas import estadisticasLiquidaciones
 from Recibos import CrearRecibo
 from Recibos import ModificarRecibo
 from Recibos import EliminarRecibo
@@ -44,7 +45,7 @@ def DetectarDatosCarga():
      else:
           print("Archivos de guardado no encontrados en el sistema de archivos.\nProcediendo al normal funcionamiento del programa.")
           return None
-def GuardarDatos(polizasRegistro, recibos, tomador, numeradorPoliza, numeradorRecibo, banlistPolizas, banlistTomadores, banlistRecibos, numeradorSiniestro, siniestros):  # MÁS PARÁMETROS EN UN FUTURO
+def GuardarDatos(polizasRegistro, recibos, tomador, numeradorPoliza, numeradorRecibo, banlistPolizas, banlistTomadores, banlistRecibos, numeradorSiniestro, siniestros, numeradorLiquidaciones, liquidaciones):  # MÁS PARÁMETROS EN UN FUTURO
     # Definimos la ruta base del directorio
     ruta_datos = '../datos'
     ruta_archivo = os.path.join(ruta_datos, 'guardado.gcs')  # Ruta completa del archivo
@@ -54,7 +55,7 @@ def GuardarDatos(polizasRegistro, recibos, tomador, numeradorPoliza, numeradorRe
         print(f"Haciendo copia de seguridad de todos los datos en el sistema de ficheros en el directorio {ruta_datos}.")
 
         # Crear la lista de datos a guardar
-        lista = [polizasRegistro, recibos, tomador, numeradorPoliza, numeradorRecibo, banlistPolizas, banlistTomadores, banlistRecibos, numeradorSiniestro, siniestros]
+        lista = [polizasRegistro, recibos, tomador, numeradorPoliza, numeradorRecibo, banlistPolizas, banlistTomadores, banlistRecibos, numeradorSiniestro, siniestros, numeradorLiquidaciones, liquidaciones]
 
         # Guardar los datos en el archivo usando `with` para garantizar seguridad
         try:
@@ -77,9 +78,7 @@ if __name__=='__main__':
     os.chdir('./datos') #Cambiamos de directorio para controlar las entradas y salidas de datos / DIRECTORIO DE GUARDADO DE DATOS
     datos_cargados=DetectarDatosCarga() #Procedemos a la carga opcional de datos 
     if datos_cargados:
-        polizasRegistro, tomador, recibos, numeradorPoliza, numeradorRecibo, banlistPolizas, banlistTomadores, banlistRecibos, numeradorSiniestro, siniestros = datos_cargados
-
-
+        polizasRegistro, tomador, recibos, numeradorPoliza, numeradorRecibo, banlistPolizas, banlistTomadores, banlistRecibos, numeradorSiniestro, siniestros, numeradorLiquidaciones, liquidaciones = datos_cargados
     else:
         polizasRegistro=[] #listado de pólizas que actualmente existen / o si no existen, directorio de guardado
         tomador=[]
@@ -335,21 +334,18 @@ if __name__=='__main__':
                     eleccEstadisticas=input("Haga su elección escribiendo el número que corresponde a cada una de las opciones >>> ")
                     match eleccEstadisticas:
                         case '1':
-                            for lista in polizasRegistro:
-                                for sublista in lista:
-                                    nrosPolizas.append(sublista['nro_poliza'])
-                            print(f"Nº de pólizas registrados > {nrosPolizas}")
-                            try:
-                                buscadorIdPoliza=int(input("Escriba uno de los números figurantes en la tabla de arriba para mostrar datos sobre pólizas registradas: "))
-                            except:
-                                print("El formato válido de inserción es una entrada de números.")
+                            if polizasRegistro: #si hay polizas
+                                estadisticasPolizas(polizasRegistro)
                             else:
-                                MostrarEstadisticaPolizas(polizasRegistro, buscadorIdPoliza)
-                            continue
+                                print("No hay pólizas registradas.\n Deberá primero formalizar una.")
+                                break
                         case '2':
-                            pass
-                        case '3':
-                            break
+                            if liquidaciones:
+                                estadisticasLiquidaciones(liquidaciones)
+                            else:
+                                print("No hay liquidaciones creadas todavía.")
+                                break
+
                         case _:
                             print("Error. Seleccione correctamente entre las opciones disponibles.")
             case '7':
@@ -359,7 +355,7 @@ if __name__=='__main__':
                     print("Antes de guardar tenga en cuenta que sobreescribirá todos los registros anteriores existentes.")
                     continuarGuarda=input("¿Desea continuar de todos modos? s/n >>> ").lower()
                     if continuarGuarda=='s':
-                        GuardarDatos(polizasRegistro, tomador, recibos, numeradorPoliza, numeradorRecibo, banlistPolizas, banlistTomadores, banlistRecibos, numeradorSiniestro, siniestros)
+                        GuardarDatos(polizasRegistro, tomador, recibos, numeradorPoliza, numeradorRecibo, banlistPolizas, banlistTomadores, banlistRecibos, numeradorSiniestro, siniestros, numeradorLiquidaciones, liquidaciones)
                         break
                     elif continuarGuarda=='n':
                         print("Operación de guardado anulada. Volviendo al menú principal.")
