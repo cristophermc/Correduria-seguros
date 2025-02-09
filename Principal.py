@@ -26,6 +26,7 @@ from Siniestros import EliminarSiniestro
 from Siniestros import ModificarSiniestro
 from Utilidades import NumLiquidaciones
 from Liquidaciones import CrearLiquidacion
+from Liquidaciones import CerrarLiquidacion
 #espacio para definición de funciones internas del programa / rutinas necesarias para consolidar los datos
 
 def DetectarDatosCarga():
@@ -109,6 +110,7 @@ if __name__=='__main__':
                     print("Menú de pólizas")
                     print()
                     print(f"Pólizas creadas actualmente > {polizasRegistro}")
+                    print(banlistPolizas)
                     print("1. Crear póliza\n2. Modificar póliza\n3. Eliminar póliza\n4. Retorno a menú principal")
                     elePolizas=input("Haga su elección escribiendo el número que corresponde a cada una de las opciones >>> ")
                     match elePolizas:
@@ -143,24 +145,8 @@ if __name__=='__main__':
 
                         case '3':
                             if polizasRegistro:
-                                for lista in polizasRegistro:
-                                    for sublista in lista:
-                                        if sublista['nro_poliza'] not in nrosPolizas:  # Verificar si ya existe
-                                            nrosPolizas.append(sublista['nro_poliza'])
-                                if nrosPolizas:
-                                    print(f"Seleccione entre los distintos identificadores de pólizas para eliminarla\n{nrosPolizas}.")
-                                    elimPol=int(input(">>> "))
-                                    if elimPol in nrosPolizas:
-                                        polizasRegistro=EliminarPoliza(elimPol, polizasRegistro)
-                                        print("Poliza borrada. Actualizando datos...")
-                                        print(polizasRegistro)
-                                        print()
-                                        print()
-                                        print("Volviendo al menú principal...")
-                                        break
-                                if not nrosPolizas:
-                                    print("Por ahora no hay pólizas para eliminar.")
-                                    break
+                                polizasRegistro, banlistPolizas, tomador, banlistTomadores, recibos, banlistRecibos=EliminarPoliza(polizasRegistro, banlistPolizas, tomador, banlistTomadores, recibos, banlistRecibos)
+                                
                             elif not polizasRegistro:
                                 #por ahora no hay nada, por tanto mandamos a crear
                                 print("No hay pólizas con las que trabajar. Volviendo al menú principal.")
@@ -217,6 +203,7 @@ if __name__=='__main__':
                     print("------------------")
                     print("Menú de recibos")
                     print()
+                    print(banlistRecibos)
                     print("1. Crear recibo\n2. Modificar recibo\n3. Eliminar recibo\n4. Retorno a menú principal")
                     print(f"Recibos creados actualmente >>> {recibos}")
                     eleRecibo = input("Haga su elección escribiendo el número que corresponde a cada una de las opciones >>> ")
@@ -297,7 +284,7 @@ if __name__=='__main__':
                     print("Menú de liquidaciones")
                     print()
                     print(liquidaciones)
-                    print("1. Generar liquidación\n2. Modificar liquidación\n3. Eliminar liquidación\n4. Retorno a menú principal")
+                    print("1. Generar liquidación\n2. Modificar liquidación\n3. Cerrar liquidación\n4. Retorno a menú principal")
                     eleLiquidacion=input("Haga su elección escribiendo el número que corresponde a cada una de las opciones >>> ")
                     match eleLiquidacion:
                         case '1':
@@ -320,7 +307,10 @@ if __name__=='__main__':
                             pass
                             break
                         case '3':
-                            pass
+                            if not siniestros and not recibos and not liquidaciones:
+                                print("Error. Deben existir primeramente datos de siniestros, recibos y liquidaciones.")
+                            else:
+                                recibos, siniestros, liquidaciones = CerrarLiquidacion(recibos, siniestros, liquidaciones)
                             break
                         case '4':
                             print("Volviendo al menú principal")

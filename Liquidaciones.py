@@ -131,21 +131,32 @@ def CrearLiquidacion(recibos:list, siniestros:list, serial:int)->list:
 
 def CerrarLiquidacion(recibos:list, siniestros:list, liquidaciones:list)->list:
     while True:
-        for elto in liquidacion:
+        for elto in liquidaciones:
             for subelto in elto:
                 for clave, valor in subelto.items():
                     print(f"- {clave}: {valor}")
         confirmar=input("¿Son estos datos correctos? Se va a proceder al cierre de la liquidación. Escriba s/n >>> ").lower()
         if confirmar == 's':
             print("Cerrando la liquidación.\nCambiando los estados de los recibos y los siniestros implicados...")
-            for elto in recibos:
+            numLiq=input("Seleccione un nº de liquidación al que quiera acceder: ")
+            for elto in liquidaciones:
                 for subelto in elto:
-                    if (subelto['estado_recibo']=='C' or subelto['estado_recibo'=='CB'] or subelto['estado_recibo']=='B') and subelto['estado_liquidacion']=='Pendiente':
-                        subelto['estado_liquidacion']='Liquidado'
-            for elto in siniestros:
-                for subelto in elto:
-                    if subelto['estado_siniestro']=='PA' and subelto['estado_liquidacion']=='P':
-                        subelto['estado_liquidacion']=='L'
-            
-            liquidacion=[]
-            print("Todos los estados modificados.\nLiquidación cerrada correctamente.")
+                    if subelto['nro_liquidacion']==numLiq:
+                        for elto in recibos:
+                            for subelto in elto:
+                                if (subelto['estado_recibo']=='C' or subelto['estado_recibo'=='CB'] or subelto['estado_recibo']=='B') and subelto['estado_liquidacion']=='Pendiente':
+                                    subelto['estado_liquidacion']='Liquidado'
+                        for elto in siniestros:
+                            for subelto in elto:
+                                if subelto['estado_siniestro']=='PA' and subelto['estado_liquidacion']=='P':
+                                    subelto['estado_liquidacion']=='L'
+                        subelto['estado_liquidacion']=='Liquidado'
+                        print("Todos los estados modificados.\nLiquidación cerrada correctamente.")
+                        return recibos, siniestros, liquidaciones
+                    else:
+                        print("No hay datos asociados a ese número de liquidación.")
+        elif confirmar == 'n':
+            print("Volviendo al menú principal. Asegúrese de que los datos sean correctos en otros campos.")
+            return
+        else:
+            print("Error. Escriba solamente s/n para continuar.")

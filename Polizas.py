@@ -264,17 +264,65 @@ def ModificarPoliza(poliza:list) -> list:
             for info in CAMPOS:
                 print(info)
             print()
+            return poliza
         else:
             print("El ID seleccionado no es válido. Asegúrese de que el número de póliza esté en la lista.")
             return poliza
-def EliminarPoliza(nro_poliza:int, poliza:list) -> list: 
-        print("Eliminando póliza elegida...")
-        poliza
+def EliminarPoliza(polizas:list, banlistPolizas:list, tomadores:list, banlistTomadores:list, recibos:list, banlistRecibos:list) -> list:
+        print("Números de póliza disponibles") 
+        print("-----------------------------")
+        ids=[]
+        for elto in polizas:
+            for subelto in elto:
+                print(f"* {subelto['nro_poliza']}")
+                ids.append(subelto['nro_poliza'])
         # Recorremos la lista para buscar la póliza
-        for dato in poliza:
-            for diccionario in dato:
-                if diccionario['nro_poliza'] == nro_poliza:
-                    poliza.remove(dato)
-                print(f"Póliza con ID: {nro_poliza} eliminada exitosamente.")
-        return poliza
-        
+        try:
+            eleccion=int(input("Escriba el número de póliza a eliminar >>> "))
+        except:
+            print("Error. El tipo de dato introducido no es numérico.")
+        else:
+            if eleccion in ids:
+                for lista_polis in polizas:
+                    for diccionario in lista_polis:
+                        if eleccion == diccionario['nro_poliza']:
+                            if diccionario['estado_poliza'] == 'Baja':
+                                id_tomador = diccionario['id_tomador']  #obtengo el id_tomador antes de eliminar para poder borrar en el resto
+                                polizas.remove(lista_polis)
+                                print(f"Póliza con ID: {eleccion} eliminada exitosamente.")
+                            else:
+                                print("Error. Sólo se pueden eliminar pólizas que NO ESTÉN VIGENTES (Baja).")
+                                return polizas, banlistPolizas, tomadores, banlistTomadores, recibos, banlistRecibos #tupla de desempaquetamiento en principal
+
+                for elto in banlistPolizas:
+                    if id_tomador in elto:
+                        banlistPolizas.remove(id_tomador)
+                        break
+                if tomadores and banlistTomadores:
+                    for elto in tomadores:
+                        for subelto in elto:
+                            if subelto['id_tomador']==id_tomador:
+                                tomadores.remove(elto)
+                                break
+                    for elto in banlistTomadores:
+                        if elto==id_tomador:
+                            banlistTomadores.remove(elto)
+                            break
+                if recibos and banlistRecibos:
+                    for elto in recibos:
+                        for subelto in elto:
+                            if subelto['nro_poliza']==eleccion:
+                                recibos.remove(elto)
+                                break
+                    for elto in banlistRecibos:
+                        if elto==eleccion:
+                            banlistRecibos.remove(elto)                
+                return polizas, banlistPolizas, tomadores, banlistTomadores, recibos, banlistRecibos #tupla de desempaquetamiento en principal
+            else:
+                print("Error. No se encuentra el id asociado.")
+                return polizas, banlistPolizas, tomadores, banlistTomadores, recibos, banlistRecibos #tupla de desempaquetamiento en principal
+                            
+            
+                    
+
+            
