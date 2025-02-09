@@ -33,7 +33,7 @@ def estadisticasLiquidaciones(liquidaciones:list):
         for subelto in elto:
             if subelto['nro_liquidacion']==seleccion:
                 for clave, valor in subelto.items():
-                    print(f"\033[32m{clave}.\033[0m :{valor}")
+                    print(f"\033[32m{clave} \033[0m :{valor}")
                 print('-'*60)
             else:
                 print("No se ha encontrado una póliza asociada a esa selección.")
