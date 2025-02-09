@@ -32,7 +32,7 @@ estado_liquidacion: Un campo con dos valores:
 • Cerrada: cuando se ha da por buenos los datos de la liquidación.
 (1) importe_recibos_cobrados: suma de los importes a pagar de los recibos
 cobrados por la correduría que se deben abonar a la compañía de seguros.
-lista_recibos_liquidar: una lista con tuplas con la siguiente información:
+***lista_recibos_liquidar: una lista con tuplas con la siguiente información:
 (nro_poliza, nro_recibo).
 (2) importe_recibos_baja: suma de los importes a dar de baja de la deuda de los
 recibos no cobrados por la correduría de las pólizas que se van a dar de baja.
@@ -40,7 +40,7 @@ lista_recibos_baja: una lista con tuplas con la siguiente información: (nro_pol
 nro_recibo).
 (3) importe_siniestros_pagados: suma de los importes abonados por la
 correduría de los siniestros pagados a descontar en la liquidación.
-lista_siniestros_liquidados: una lista con tuplas con la siguiente información:
+lista_siniestros_pagados: una lista con tuplas con la siguiente información:
 (nro_poliza, nro_siniestro).
 importe_liquidacion: Una tupla con la siguiente información ( (1) - (3), (2) ). El
 primer campo es la resta de lo marcado como (1) menos el importe de lo marcado
@@ -71,35 +71,60 @@ def CrearLiquidacion(recibos:list, siniestros:list, serial:int)->list:
     #generación seriada:
     nro_liquidacion=fecha_liquidacion[6:]+'-'+str(serial) #se coge del programa principal el seriado incrementado y se añade al año de la liquidación
     estado_liquidacion='Abierta'
+    #1º
     importe_recibos_cobrados=0 #inicialización a 0 y vamos a barrer en breves
-    for elto in recibos: #entiendo que para barrer en busca de cobrados hay que moverse por recibos
+    for elto in recibos: #entiendo que para barrer en busca de cobrados hay que moverse por recibos - iteramos y buscamos coincidencias | si las hay, mandamos a incrementar
         for subelto in elto:
-            if subelto['estado_recibo']=='C' and subelto['estado_liquidacion']=='Liquidado':
+            if (subelto['estado_recibo']=='C' or subelto['estado_recibo'=='CB']) and subelto['estado_liquidacion']=='Pendiente':
                 importe_recibos_cobrados+=subelto['importe_cobrar']
-    pass
+    lista_recibos_liquidar=[] #inicializamos una lista vacía
+    #se obtiene filtrando aquellos recibos que han sido cobrados por la correduría, 
+    # pero que aún no han sido liquidados a la aseguradora.
+    for elto in recibos: 
+        for subelto in elto:
+            if (subelto['estado_recibo']=='C' or subelto['estado_recibo'=='CB']) and subelto['estado_liquidacion']=='Pendiente':
+                elementos_liquidar=(subelto['nro_poliza'], subelto['id_recibo'])
+                lista_recibos_liquidar.append(elementos_liquidar)
+    #2º
+    importe_recibos_baja=0
+    for elto in recibos:
+        for subelto in elto:
+            if subelto['estado_recibo']=='B' and subelto['estado_liquidacion']=='Pendiente':
+                importe_recibos_baja+=subelto['importe_pagar']
+    lista_recibos_baja=[]
+    for elto in recibos:
+        for subelto in elto:
+            if subelto['estado_recibo']=='B' and subelto['estado_liquidacion']=='Pendiente':
+                elementos_liquidar_baja=(subelto['nro_poliza'], subelto['id_recibo'])
+                lista_recibos_baja.append(elementos_liquidar_baja)
+    #3º 
+    importe_siniestros_pagados=0 #Ahora nos movemos por siniestros y bajo las condiciones de PA y P en estado_siniestro y estado_liquidacion, extraemos el importe_pagar e incrementamos
+    for elto in siniestros:
+        for subelto in elto:
+            if subelto['estado_siniestro']=='PA' and subelto['estado_liquidacion']=='P':
+                importe_siniestros_pagados+=subelto['importe_pagar']
+    lista_siniestros_pagados=[]
+    for elto in siniestros:
+        for subelto in elto:
+            if subelto['estado_siniestro']=='PA' and subelto['estado_liquidacion']=='P':
+                elementos_siniestros_liquidar=(subelto['nro_poliza'], subelto['id_siniestro'])
+                lista_siniestros_pagados.append(elementos_siniestros_liquidar)
+    #CALCULO DE LIQUIDACION ( (1) - (3), (2) )
+    importe_liquidacion=((importe_recibos_cobrados-importe_siniestros_pagados), importe_recibos_baja)
+    dLiquidacion={'nro_liquidacion': nro_liquidacion,
+                  'fecha_liquidacion': fecha_liquidacion,
+                  'estado_liquidacion': estado_liquidacion,
+                  'importe_recibos_cobrados': importe_recibos_cobrados,
+                  'lista_recibos_liquidar': lista_recibos_liquidar,
+                  'importe_recibos_baja': importe_recibos_baja,
+                  'lista_recibos_baja': lista_recibos_baja,
+                  'importe_siniestros_pagados': importe_siniestros_pagados,
+                  'lista_siniestros_pagados': lista_siniestros_pagados,
+                  'importe_liquidacion': importe_liquidacion}
+    print(f"Se ha creado una liquidación con número identificador {nro_liquidacion}.")
+    liquidacion=[]
+    liquidacion.append(dLiquidacion)
+    return liquidacion
 
-    
-
-# '''- Se barre la lista de recibos y se cogen todos los recibos que se han cobrado
-# por la agencia y que no se han liquidado a la compañía de seguros. Se
-# totaliza la cantidad de dinero que se debería pagar a la compañía por este
-# concepto.'''
-#     # Calculamos el importe de la liquidación:
-#     # - Primer valor: total de recibos cobrados menos total de siniestros pagados.
-#     # - Segundo valor: total de recibos dados de baja.
-# importe_liquidacion = (total_recibos_cobrados - total_siniestros_pagados, total_recibos_baja)
-
-#     # Creamos un diccionario con la información de la liquidación
-#     liquidacion = {
-#         "nro_liquidacion": nro_liquidacion,
-#         "fecha_liquidacion": fecha_liquidacion,
-#         "estado_liquidacion": estado_liquidacion,  # Estado inicial de la liquidación
-#         "importe_recibos_cobrados": importe_recibos_cobrados, #BARRIDO DE 
-#         "lista_recibos_liquidar": lista_recibos_liquidar,
-#         "importe_recibos_baja": total_recibos_baja,
-#         "lista_recibos_baja": lista_recibos_baja,
-#         "importe_siniestros_pagados": total_siniestros_pagados,
-#         "lista_siniestros_liquidados": lista_siniestros_liquidados,
-#         "importe_liquidacion": importe_liquidacion,
-#     }
-#     return liquidacion
+##El siguiente paso ahora es cerrar la liquidación, lo que significa mandar un mensaje al usuario para que confirme y, además, 
+#se debe hacer antes del return

@@ -39,3 +39,7 @@ pendiente la implementación de la validación de cada uno de los datos.
 5. Se ha mejorado la creación de siniestros de `CrearSiniestro()`.
 6. Se ha implementado la opción de borrado de `EliminarSiniestro()`. 
 7. `Siniestros.py` está al día en materia de comprobaciones lógicas e interacciones con el usuario y la ecología del programa.
+
+## 09/02/2025
+### Acciones a considerar:
+1. Cuando una de las pólizas, tomadores, o recibos se eliminan del sistema, hay que actualizar los banlist (o eliminar la medida de las banlist por la implementación del recorrido antes de validar).

@@ -85,14 +85,15 @@ if __name__=='__main__':
         tomador=[]
         recibos=[]
         siniestros=[]
+        liquidaciones=[]
         numeradorPoliza=0
         numeradorRecibo=0
         numeradorSiniestro=0
+        numeradorLiquidaciones=0
         banlistPolizas=[]
         banlistTomadores=[]
         banlistRecibos=[]
-        numeradorLiquidaciones=0
-        liquidaciones=[]
+        
     while True:
         print("----------------------------------------")
         print("\033[31mCorreduría 'Mi Coche Asegurado'.\033[0m")
@@ -302,10 +303,11 @@ if __name__=='__main__':
                     match eleLiquidacion:
                         case '1':
                             print("Asistente de generación de liquidaciones.")
-                            if siniestros and recibos:
+                            if siniestros and recibos: #la validación se hace por fuera (no es necesario hacerla dentro de la función)
                                 numeradorLiquidaciones=NumLiquidaciones(numeradorLiquidaciones)
                                 nuevaLiquidacion=CrearLiquidacion(recibos, siniestros, numeradorLiquidaciones)
                                 liquidaciones.append(nuevaLiquidacion)
+                            #casos donde no hay ni una cosa, ni la otra, o las dos a la vez
                             if not siniestros and not recibos:
                                 print("No hay registros de siniestros ni recibos. Volviendo al menú principal.")
                                 break
