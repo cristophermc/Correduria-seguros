@@ -161,7 +161,7 @@ def CrearPoliza(nro_poliza:int, tomadores:list, banlist:list) -> list:
                     continue
         break
 
-    id_cobertura=tuple(idConductor)
+    id_conductor=tuple(idConductor)
     estado_poliza=''
     print("Cargando datos de actualización de estado de póliza...\nLa póliza puede solamente estar en uno de los siguientes estados:\nCobrada\nPteCobro\nBaja")
     while True:
@@ -227,7 +227,7 @@ def CrearPoliza(nro_poliza:int, tomadores:list, banlist:list) -> list:
                 'matricula':matricula,
                 'datos_vehiculo':datos_vehiculo,
                 'cobertura':cobertura,
-                'id_cobertura': id_cobertura,
+                'id_conductor': id_conductor,
                 'estado_poliza':estado_poliza,
                 'fecha_emision':fecha_emision,
                 'forma_pago': forma_pago}
@@ -236,7 +236,7 @@ def CrearPoliza(nro_poliza:int, tomadores:list, banlist:list) -> list:
     print(f"Póliza creada exitosamente.")
     print("Volviendo al menú principal.")
     return lista
-def ModificarPoliza(poliza:list) -> list:
+def ModificarPoliza(poliza:list, banlistPolizas:list, tomadores:list) -> list:
     #1. Se tiene que seleccionar la póliza, la llamamos por el ID.
     '''ID -> lista que contiene los identificadores de las pólizas - se usa para validar
        CAMPOS -> lista que contiene los campos de las pólizas - se usa para acceder a los datos de manera sencilla'''
@@ -259,14 +259,62 @@ def ModificarPoliza(poliza:list) -> list:
         print()
         
         print("Seleccione entre los siguientes números de póliza: ")
-        seleccionID=int(input('>>> '))
+        seleccionID=input('>>> ') #ELECCION DEL USUARIO Y AQUI ACCEDEMOS
         if seleccionID in ID:
-            print("Para modificar la póliza se deberá primero seleccionar el campo que se quiere modificar.")
-            print("Estos son los campos:")
-            for info in CAMPOS:
-                print(info)
-            print()
-            return poliza
+            while True:
+                print("Para modificar la póliza se deberá primero seleccionar el campo que se quiere modificar.")
+                print("Estos son los campos:")
+                for info in CAMPOS:
+                    print(info)
+                print()
+                seleccionCampo=input("Escriba el campo correspondiente >>> ")
+                break
+            
+            match seleccionCampo:
+                case 'id_tomador':
+                    while True:
+                        TOMADORESID=[]
+                        for elto in tomadores:
+                            for subelto in elto:
+                                if subelto['id_tomador'] not in TOMADORESID:
+                                    TOMADORESID.append(subelto['id_tomador'])
+                        print("Esta es la lista de identificadores que existen de los tomadores:")
+                        for elto in TOMADORESID:
+                            print(f"-{elto}")
+                        print("De los cuales estos ya se han usado y no pueden repetirse:")
+                        for elto in banlistPolizas:
+                            print(f"-{elto}")    
+                        id_tomador = input("Escriba el NIF | NIE | CIF >>> ")
+                        if id_tomador not in banlistPolizas and id_tomador in TOMADORESID: #filtro: que no esté en la lista de no permitidos y que esté en la lista de TOMADORESID
+                            if ValidarDocumento(id_tomador):
+                                print("Documento validado correctamente.")
+                                print("Modificando...")
+                                for elto in poliza:
+                                    for subelto in elto:
+                                        if subelto['nro_poliza']==seleccionID:
+                                            subelto['id_tomador']=id_tomador
+                                            banlistPolizas.append(id_tomador)
+                                            return poliza, banlistPolizas, tomadores
+                            else:
+                                print("Error. El tipo de documento no es válido según las normas de validación estándares en España.\nEscriba nuevamente un valor para NIF | NIE | CIF\n\n")
+                        else:
+                            print("Esa identificación no se encuentra entre las bases de datos registradoras o ya se ha usado con anterioridad.")
+                case 'matricula':
+                    pass
+                case 'datos_vehiculo':
+                    pass
+                case 'cobertura':
+                    pass
+                case 'id_conductor':
+                    pass
+                case 'estado_poliza':
+                    pass
+                case 'fecha_emision':
+                    pass
+                case 'forma_pago':
+                    pass
+
+
         else:
             print("El ID seleccionado no es válido. Asegúrese de que el número de póliza esté en la lista.")
             return poliza

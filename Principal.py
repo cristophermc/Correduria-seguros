@@ -47,7 +47,7 @@ def DetectarDatosCarga():
           print("Archivos de guardado no encontrados en el sistema de archivos.\nProcediendo al normal funcionamiento del programa.")
           return None
 def GuardarDatos(polizasRegistro, recibos, tomador, numeradorPoliza, numeradorRecibo, banlistPolizas, banlistTomadores, banlistRecibos, numeradorSiniestro, siniestros, numeradorLiquidaciones, liquidaciones):  # MÁS PARÁMETROS EN UN FUTURO
-    # Definimos la ruta base del directorio
+    #definimos la ruta base del directorio
     ruta_datos = '../datos'
     ruta_archivo = os.path.join(ruta_datos, 'guardado.gcs')  # Ruta completa del archivo
 
@@ -55,21 +55,21 @@ def GuardarDatos(polizasRegistro, recibos, tomador, numeradorPoliza, numeradorRe
         print("Proceso de guardado de datos seleccionado.")
         print(f"Haciendo copia de seguridad de todos los datos en el sistema de ficheros en el directorio {ruta_datos}.")
 
-        # Crear la lista de datos a guardar
+        #lista de datos de guardado
         lista = [polizasRegistro, recibos, tomador, numeradorPoliza, numeradorRecibo, banlistPolizas, banlistTomadores, banlistRecibos, numeradorSiniestro, siniestros, numeradorLiquidaciones, liquidaciones]
 
-        # Guardar los datos en el archivo usando `with` para garantizar seguridad
+        #guardamos los datos en el archivo usando `with` para garantizar seguridad
         try:
             with open(ruta_archivo, 'wb') as guardado:
                 pickle.dump(lista, guardado)
 
-            # Confirmar de alguna manera que el archivo se guardó correctamente
+            #confirmar de alguna manera que el archivo se guardó correctamente
             if os.path.exists(ruta_archivo):
                 print(f"El archivo se ha generado correctamente en: {os.path.abspath(ruta_archivo)}")
                 print("Volviendo al menú principal.")
             else:
                 print("Ha habido un error en el guardado de datos. Volviendo al menú principal.")
-        except Exception as e:
+        except Exception as e: #levantamos la excepción en caso de error
             print(f"Error durante el guardado de datos: {e}")
             return None
     else:
@@ -139,7 +139,7 @@ if __name__=='__main__':
                             if tomador:
                                 print("Se procede a modificar una póliza")
                                 if polizasRegistro:
-                                    polizasRegistro=ModificarPoliza(polizasRegistro)
+                                    polizasRegistro, banlistPolizas, tomadores=ModificarPoliza(polizasRegistro, banlistPolizas, tomador)
                                 else:
                                     print("Se ha encontrado un error. No existen pólizas registradas.")
 
