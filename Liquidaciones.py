@@ -158,7 +158,7 @@ def CerrarLiquidacion(recibos:list, siniestros:list, liquidaciones:list)->list:
                 for elto in recibos:
                     for subelto in elto:
                         if subelto['id_recibo']==elemento[1]: #este funcionamiento teorico es correcto y comprobado por el IDLE de Python
-                            pass
+                            subelto['estado_liquidacion']='Liquidado' #se establece entonces el estado de Liquidado donde antes estaba en pendiente
             return recibos, siniestros, liquidaciones
 
         #                 for elto in recibos:
