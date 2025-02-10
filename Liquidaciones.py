@@ -154,6 +154,11 @@ def CerrarLiquidacion(recibos:list, siniestros:list, liquidaciones:list)->list:
             print(recibosLiquidar)
             print(listaRecibosBaja)
             print(siniestrosPagados)
+            for elemento in recibosLiquidar:
+                for elto in recibos:
+                    for subelto in elto:
+                        if subelto['id_recibo']==elemento[1]: #este funcionamiento teorico es correcto y comprobado por el IDLE de Python
+                            pass
             return recibos, siniestros, liquidaciones
 
         #                 for elto in recibos:
