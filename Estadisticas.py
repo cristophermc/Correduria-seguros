@@ -7,22 +7,26 @@ liquidación.
 '''
 
 def estadisticasPolizas(polizas:list):
+    ID=[]
     for elto in polizas:
         for subelto in elto:
             print(f"- Nº póliza: {subelto['nro_poliza']}")
+            ID.append(subelto['nro_poliza'])
+
     try:
         seleccion=int(input("Escriba literalmente el número de póliza al que quiere acceder >>> "))
     except:
         print("Error. Sólo se puede acceder mediante valores numéricos.")
     else:
-        for elto in polizas:
-            for subelto in elto:
-                if subelto['nro_poliza']==seleccion:
-                    for clave, valor in subelto.items():
-                        print(f"{clave}: {valor}")
-                else:
-                    print("No se ha encontrado una póliza asociada a esa selección.")
-                    return
+        if seleccion in ID:
+            for elto in polizas:
+                for subelto in elto:
+                    if subelto['nro_poliza']==seleccion:
+                        for clave, valor in subelto.items():
+                            print(f"{clave}: {valor}")
+        else:
+            print("Error. No se ha encontrado la póliza asociada.")
+
 def estadisticasLiquidaciones(liquidaciones:list):
     for elto in liquidaciones:
         for subelto in elto:

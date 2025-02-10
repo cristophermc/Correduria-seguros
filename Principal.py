@@ -335,6 +335,8 @@ if __name__=='__main__':
                             else:
                                 print("No hay liquidaciones creadas todavía.")
                                 break
+                        case '3':
+                            break
 
                         case _:
                             print("Error. Seleccione correctamente entre las opciones disponibles.")
