@@ -15,11 +15,8 @@ def CrearRecibo(id_recibo:int, banlist:list, polizas:list) -> list:
             ID.append(subelto['nro_poliza'])  # Guardar IDs de pólizas
 
     print()
-    try:
-        eleccion = int(input("Seleccione un número de póliza >>> "))
-    except:
-        print("Error. Introduzca un número válido.")
-        return None
+    eleccion=input("Seleccione un número de póliza >>> ")
+ 
 
     # Verificar si la elección está en las pólizas existentes
     if eleccion not in ID:
@@ -31,129 +28,130 @@ def CrearRecibo(id_recibo:int, banlist:list, polizas:list) -> list:
     print("\nEstablecer ahora la fecha de inicio del recibo (DD/MM/AAAA).")
 
     # Validación de fecha de inicio
-    while True:
-        fecha_inicio = input(">>> ")
-        if len(fecha_inicio)==10 and fecha_inicio[2]=='/' and fecha_inicio[5]=='/' and fecha_inicio[:2].isdigit() and fecha_inicio[3:5].isdigit() and fecha_inicio[6:].isdigit():
-            fechaIn=fecha_inicio.split('/')
-            listaAux=[]
-            for elto in fechaIn:
-                elto=int(elto)
-                listaAux.append(elto)
-            if listaAux[0]>=1 and listaAux[0]<=31 and listaAux[1]>=1 and listaAux[1]<=12 and listaAux[2]>=1900 and listaAux[2]<=2025:
-                print("Fecha de nacimiento válida. Registrando...")
-                break
-        else:
-            print("Error. La fecha de nacimiento introducida no es válida. Por favor, introduzca una fecha en el formato DD/MM/AAAA.")
-            continue
+    if eleccion in ID:
+        while True:
+            fecha_inicio = input(">>> ")
+            if len(fecha_inicio)==10 and fecha_inicio[2]=='/' and fecha_inicio[5]=='/' and fecha_inicio[:2].isdigit() and fecha_inicio[3:5].isdigit() and fecha_inicio[6:].isdigit():
+                fechaIn=fecha_inicio.split('/')
+                listaAux=[]
+                for elto in fechaIn:
+                    elto=int(elto)
+                    listaAux.append(elto)
+                if listaAux[0]>=1 and listaAux[0]<=31 and listaAux[1]>=1 and listaAux[1]<=12 and listaAux[2]>=1900 and listaAux[2]<=2025:
+                    print("Fecha de nacimiento válida. Registrando...")
+                    break
+            else:
+                print("Error. La fecha de nacimiento introducida no es válida. Por favor, introduzca una fecha en el formato DD/MM/AAAA.")
+                continue
 
-    # Duración del recibo
-    print("\nCargando rutinas de estado de duración de un recibo...")
-    duraciones = ('A', 'S', 'T', 'M')
-    while True:
-        print("Las pólizas se cobran de manera:\n(A)nual\n(S)emestral\n(T)rimestral\n(M)ensual")
-        duracion = input("Seleccione de entre las opciones anteriores >>> ").upper()
-        if duracion in duraciones:
-            print("Periodo de liquidación de póliza seleccionado con éxito.")
-            break
-        else:
-            print("Error. Seleccione correctamente entre las opciones listadas anteriormente (Indicadas en el paréntesis).")
-
-    # Importe a cobrar
-    while True:
-        try:
-            importe_cobrar = float(input("Escriba el monto a cobrar en cada vencimiento del periodo de liquidación >>> "))
-            print("Importe seleccionado.")
-            break
-        except ValueError:
-            print("Error. Escriba solamente entradas numéricas decimales en el importe a cobrar.")
-
-    # Fecha de cobro
-    while True:
-        fecha_cobro = input("Establezca la fecha de cobro (DD/MM/AAAA) >>> ")
-        if len(fecha_cobro) == 10 and fecha_cobro[2] == '/' and fecha_cobro[5] == '/' and \
-           fecha_cobro[:2].isdigit() and fecha_cobro[3:5].isdigit() and fecha_cobro[6:].isdigit():
-            dia, mes, anio = map(int, fecha_cobro.split('/'))
-            if 1 <= dia <= 31 and 1 <= mes <= 12 and 1900 <= anio <= 2025:
-                print("Fecha de cobro válida. Registrando...")
+        # Duración del recibo
+        print("\nCargando rutinas de estado de duración de un recibo...")
+        duraciones = ('A', 'S', 'T', 'M')
+        while True:
+            print("Las pólizas se cobran de manera:\n(A)nual\n(S)emestral\n(T)rimestral\n(M)ensual")
+            duracion = input("Seleccione de entre las opciones anteriores >>> ").upper()
+            if duracion in duraciones:
+                print("Periodo de liquidación de póliza seleccionado con éxito.")
                 break
             else:
-                print("Error. La fecha de cobro introducida no es válida.")
-        else:
-            print("Error. Formato incorrecto. Use DD/MM/AAAA.")
+                print("Error. Seleccione correctamente entre las opciones listadas anteriormente (Indicadas en el paréntesis).")
 
-    # Estado del recibo
-    estadosrecibos = ['P', 'PB', 'C', 'CB', 'B']
-    while True:
-        print("Seleccione el estado del recibo:\n(P)endiente\n(PB)endiente_banco\n(C)obrado\n(CB)obrado_banco\n(B)aja")
-        estado_recibo = input(">>> ").upper()
-        if estado_recibo in estadosrecibos:
-            print("Estado correctamente introducido.")
-            break
-        else:
-            print("Error. Seleccione correctamente entre las opciones listadas.")
-    print("Seleccionando ahora el importe a pagar por el cobrador de la póliza a la compañía.")
-    while True:
-        try:
-            importe_pagar=float(input("Escriba el monto a pagar por el cobrador de la póliza >>> "))
-        except:
-            print("Error. Escriba solamente entradas numéricas decimales en el importe a pagar.")
-            continue
-        else:
-            print("Importe seleccionado.")
-            break
-    print()
-    print("Estableciendo ahora el estado de liquidación.")
-    while True:
-        print("El recibo puede estar en dos estados: (P)endiente o (L)iquidado.")
-        estado_liquidacion=input("Seleccione el estado de liquidación >>> ").upper()
-        if estado_liquidacion=='P':
-            estado_liquidacion='Pendiente'
-            print("Estado de liquidación establecido con éxito.")
-            break
-        elif estado_liquidacion=='L':
-            estado_liquidacion='Liquidado'
-            print("Estado de liquidación establecido con éxito.")
-            break
-        else:
-            print("Error. Escoja adecuadamente entre los estados figurados.")
+        # Importe a cobrar
+        while True:
+            try:
+                importe_cobrar = float(input("Escriba el monto a cobrar en cada vencimiento del periodo de liquidación >>> "))
+                print("Importe seleccionado.")
+                break
+            except ValueError:
+                print("Error. Escriba solamente entradas numéricas decimales en el importe a cobrar.")
+
+        # Fecha de cobro
+        while True:
+            fecha_cobro = input("Establezca la fecha de cobro (DD/MM/AAAA) >>> ")
+            if len(fecha_cobro) == 10 and fecha_cobro[2] == '/' and fecha_cobro[5] == '/' and \
+            fecha_cobro[:2].isdigit() and fecha_cobro[3:5].isdigit() and fecha_cobro[6:].isdigit():
+                dia, mes, anio = map(int, fecha_cobro.split('/'))
+                if 1 <= dia <= 31 and 1 <= mes <= 12 and 1900 <= anio <= 2025:
+                    print("Fecha de cobro válida. Registrando...")
+                    break
+                else:
+                    print("Error. La fecha de cobro introducida no es válida.")
+            else:
+                print("Error. Formato incorrecto. Use DD/MM/AAAA.")
+
+        # Estado del recibo
+        estadosrecibos = ['P', 'PB', 'C', 'CB', 'B']
+        while True:
+            print("Seleccione el estado del recibo:\n(P)endiente\n(PB)endiente_banco\n(C)obrado\n(CB)obrado_banco\n(B)aja")
+            estado_recibo = input(">>> ").upper()
+            if estado_recibo in estadosrecibos:
+                print("Estado correctamente introducido.")
+                break
+            else:
+                print("Error. Seleccione correctamente entre las opciones listadas.")
+        print("Seleccionando ahora el importe a pagar por el cobrador de la póliza a la compañía.")
+        while True:
+            try:
+                importe_pagar=float(input("Escriba el monto a pagar por el cobrador de la póliza >>> "))
+            except:
+                print("Error. Escriba solamente entradas numéricas decimales en el importe a pagar.")
+                continue
+            else:
+                print("Importe seleccionado.")
+                break
+        print()
+        print("Estableciendo ahora el estado de liquidación.")
+        while True:
+            print("El recibo puede estar en dos estados: (P)endiente o (L)iquidado.")
+            estado_liquidacion=input("Seleccione el estado de liquidación >>> ").upper()
+            if estado_liquidacion=='P':
+                estado_liquidacion='Pendiente'
+                print("Estado de liquidación establecido con éxito.")
+                break
+            elif estado_liquidacion=='L':
+                estado_liquidacion='Liquidado'
+                print("Estado de liquidación establecido con éxito.")
+                break
+            else:
+                print("Error. Escoja adecuadamente entre los estados figurados.")
         print()
         print("Estableciendo ahora la fecha de liquidación.")
-    while True:
-        fecha_liquidacion=input("DD/MM/AAAA >>> ")
-        if len(fecha_liquidacion)==10 and fecha_liquidacion[2]=='/' and fecha_liquidacion[5]=='/' and fecha_liquidacion[:2].isdigit() and fecha_liquidacion[3:5].isdigit() and fecha_liquidacion[6:].isdigit():
-            fechaLq=fecha_liquidacion.split('/')
-            listaAux=[]
-            for elto in fechaLq:
-                elto=int(elto)
-                listaAux.append(elto)
-            if listaAux[0]>=1 and listaAux[0]<=31 and listaAux[1]>=1 and listaAux[1]<=12 and listaAux[2]>=1900 and listaAux[2]<=2025:
-                print("Fecha de liquidación válida. Registrando...")
-                break
-            else:
-                print("Error. La fecha de liquidación introducida no es válida. Por favor, introduzca una fecha en el formato DD/MM/AAAA.")
-                continue
-        
-    print(f"Creando recibo asociado a la póliza con identificador {eleccion}")
-    dNroRecibo = {
-        'id_recibo': id_recibo,
-        'nro_poliza': eleccion,
-        'fecha_inicio': fecha_inicio,
-        'duracion': duracion,
-        'importe_cobrar': importe_cobrar,
-        'fecha_cobro': fecha_cobro,
-        'estado_recibo': estado_recibo,
-        'importe_pagar': importe_pagar,
-        'estado_liquidacion':estado_liquidacion,
-        'fecha_liquidacion':fecha_liquidacion,
-        }
-    lista.append(dNroRecibo)
+        while True:
+            fecha_liquidacion=input("DD/MM/AAAA >>> ")
+            if len(fecha_liquidacion)==10 and fecha_liquidacion[2]=='/' and fecha_liquidacion[5]=='/' and fecha_liquidacion[:2].isdigit() and fecha_liquidacion[3:5].isdigit() and fecha_liquidacion[6:].isdigit():
+                fechaLq=fecha_liquidacion.split('/')
+                listaAux=[]
+                for elto in fechaLq:
+                    elto=int(elto)
+                    listaAux.append(elto)
+                if listaAux[0]>=1 and listaAux[0]<=31 and listaAux[1]>=1 and listaAux[1]<=12 and listaAux[2]>=1900 and listaAux[2]<=2025:
+                    print("Fecha de liquidación válida. Registrando...")
+                    break
+                else:
+                    print("Error. La fecha de liquidación introducida no es válida. Por favor, introduzca una fecha en el formato DD/MM/AAAA.")
+                    continue
+            
+        print(f"Creando recibo asociado a la póliza con identificador {eleccion}")
+        dNroRecibo = {
+            'id_recibo': str(id_recibo), #reconversión a string
+            'nro_poliza': eleccion,
+            'fecha_inicio': fecha_inicio,
+            'duracion': duracion,
+            'importe_cobrar': importe_cobrar,
+            'fecha_cobro': fecha_cobro,
+            'estado_recibo': estado_recibo,
+            'importe_pagar': importe_pagar,
+            'estado_liquidacion':estado_liquidacion,
+            'fecha_liquidacion':fecha_liquidacion,
+            }
+        lista.append(dNroRecibo)
 
-    # Actualizar banlist con la póliza utilizada
-    # banlist.append(eleccion)
+        # Actualizar banlist con la póliza utilizada
+        # banlist.append(eleccion)
 
-    print(f"Recibo creado con identificador {id_recibo}")
-    return lista
-def ModificarRecibo(lista_recibos: list, polizas:list) -> list:
+        print(f"Recibo creado con identificador {id_recibo}")
+        return lista
+def ModificarRecibo(lista_recibos: list) -> list:
     CAMPOS=[]
     nroPol=[]
     duraciones = ('A', 'S', 'T', 'M')
@@ -419,7 +417,7 @@ def EliminarRecibo(listaRecibos: list) -> list:
         for subelto in elto:
             print(f"id_recibo: {subelto['id_recibo']}")
             pass
-    seleccionarID=int(input("Introduzca el ID del recibo que desea eliminar >>> "))
+    seleccionarID=input("Introduzca el ID del recibo que desea eliminar >>> ") #MODIFICADO CON ANTIGUO INT
     for elto in listaRecibos:
         for recibo in elto:
             if recibo['id_recibo']==seleccionarID:

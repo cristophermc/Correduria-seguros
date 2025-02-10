@@ -150,13 +150,19 @@ def RecogerBanlistRecibo(recibos: list) -> list:
 def NumSiniestro(numSiniestro:int) ->str: #Toma un nº de siniestro inicializado en 0 y cuando se pasa a la función de creación se modifica.
     #aaaa-nro_correlativo
     #ESTRUCTURA ANTES DEL -
-    letras='abcdefghijklmnñopqrstuvwxyz'
-    NumIDSiniestro=''
-    for i in range(4):
-        NumIDSiniestro+=random.choice(letras).upper()
-    NumIDSiniestro+='-'
-    NumIDSiniestro+=str(numSiniestro)
-    return NumIDSiniestro
+    while True:
+        try:
+            año=int(input("Introduzca el año vigente >>> "))
+        except:
+            print("Error. El año debe ser un campo numérico.")
+        else:
+            if año>=1900 and año<=2025:
+                NumIDSiniestro=str(año)
+                NumIDSiniestro+='-'
+                NumIDSiniestro+=str(numSiniestro)
+                return NumIDSiniestro
+            else:
+                print("Error. El año debe comprender entre 1900-2025.")
 def NumLiquidaciones(numeradorLiquidaciones:int)->int:
     numeradorLiquidaciones+=1
     return numeradorLiquidaciones

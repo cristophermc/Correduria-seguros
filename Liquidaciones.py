@@ -130,6 +130,8 @@ def CrearLiquidacion(recibos:list, siniestros:list, serial:int)->list:
 #se debe hacer antes del return
 
 def CerrarLiquidacion(recibos:list, siniestros:list, liquidaciones:list)->list:
+    liqEncontrada=False
+
     while True:
         for elto in liquidaciones:
             for subelto in elto:
@@ -142,38 +144,36 @@ def CerrarLiquidacion(recibos:list, siniestros:list, liquidaciones:list)->list:
             for elto in liquidaciones:
                 for subelto in elto:
                     if subelto['nro_liquidacion']==numLiq:
-                        subelto['estado_liquidacion']=='Liquidado' #cambio de estado a liquidado, pero ahora toca barrer para modificar en el resto de listas
-                        pass
-            for elto in liquidaciones: #extraigo los datos de mi liquidación que quiero cerrar
-                for subelto in elto:
-                    if subelto['nro_liquidacion']==numLiq:
-                        recibosLiquidar=subelto['lista_recibos_liquidar']
-                        listaRecibosBaja=subelto['lista_recibos_baja']
-                        siniestrosPagados=subelto['lista_siniestros_pagados']
-            
-            print(recibosLiquidar)
-            print(listaRecibosBaja)
-            print(siniestrosPagados)
-            for elemento in recibosLiquidar:
-                for elto in recibos:
+                        liqEncontrada=True
+                        subelto['estado_liquidacion']='Liquidado' #cambio de estado a liquidado, pero ahora toca barrer para modificar en el resto de listas
+            if liqEncontrada:
+                for elto in liquidaciones: #extraigo los datos de mi liquidación que quiero cerrar
                     for subelto in elto:
-                        if subelto['id_recibo']==elemento[1]: #este funcionamiento teorico es correcto y comprobado por el IDLE de Python
-                            subelto['estado_liquidacion']='Liquidado' #se establece entonces el estado de Liquidado donde antes estaba en pendiente
-            return recibos, siniestros, liquidaciones
+                        if subelto['nro_liquidacion']==numLiq:
+                            recibosLiquidar=subelto['lista_recibos_liquidar']
+                            listaRecibosBaja=subelto['lista_recibos_baja']
+                            siniestrosPagados=subelto['lista_siniestros_pagados']
+                
+                print(recibosLiquidar)
+                print(listaRecibosBaja)
+                print(siniestrosPagados)
+                for elemento in recibosLiquidar:
+                    for elto in recibos:
+                        for subelto in elto:
+                            if subelto['id_recibo']==elemento[1]: #este funcionamiento teorico es correcto y comprobado por el IDLE de Python
+                                subelto['estado_liquidacion']='Liquidado'
+                for elemento in listaRecibosBaja:
+                    for elto in recibos:
+                        for subelto in elto:
+                            if subelto['id_recibo']==elemento[1]:
+                                subelto['estado_liquidacion']='Liquidado'
+                for elemento in siniestrosPagados:
+                    for elto in siniestros:
+                        for subelto in elto:
+                            if subelto['id_siniestro']==elemento[1]:
+                                subelto['estado_liquidacion']='L' #se establece entonces el estado de Liquidado donde antes estaba en pendiente
+                return recibos, siniestros, liquidaciones
+            else:
+                print("Error. No se ha encontrado el id de la liquidación a cerrar.")
+                return recibos, siniestros, liquidaciones
 
-        #                 for elto in recibos:
-        #                     for subelto in elto:
-        #                         if (subelto['estado_recibo']=='C' or subelto['estado_recibo'=='CB'] or subelto['estado_recibo']=='B') and subelto['estado_liquidacion']=='Pendiente':
-        #                          for elto in siniestros:
-        #                             for subelto in elto:
-        #                                 if subelto['estado_siniestro']=='PA' and subelto['estado_liquidacion']=='P':
-        #                                     subelto['estado_liquidacion']=='L'
-        #                                     print("Todos los estados modificados.\nLiquidación cerrada correctamente.")
-        #                                     return recibos, siniestros, liquidaciones
-        #             else:
-        #                 print("No hay datos asociados a ese número de liquidación.")
-        # elif confirmar == 'n':
-        #     print("Volviendo al menú principal. Asegúrese de que los datos sean correctos en otros campos.")
-        #     return
-        # else:
-        #     print("Error. Escriba solamente s/n para continuar.")

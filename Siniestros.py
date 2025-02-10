@@ -1,6 +1,6 @@
 #Cristopher Méndez Cervantes | Ángel Cristo Castro Martín
 from Utilidades import ComprobarMatricula
-def CrearSiniestro(id_siniestro: str, polizas:list) -> list:
+def CrearSiniestro(id_siniestro:str, polizas:list) -> list:
     lista=[]
     print("Primero seleccione un ID de póliza sobre la cual formalizar el siniestro.")
     print("Escoja el número de póliza sobre el cual crear un recibo asociado.")
@@ -12,7 +12,7 @@ def CrearSiniestro(id_siniestro: str, polizas:list) -> list:
         for subelto in elto:
             IDpolizas.append(subelto['nro_poliza'])
     print()
-    eleccion=int(input(">>>"))
+    eleccion=input(">>>")
     # global nro_poliza
     if eleccion in IDpolizas:
         for elto in polizas:
@@ -166,6 +166,9 @@ def CrearSiniestro(id_siniestro: str, polizas:list) -> list:
                                     print(f"Siniestro creado para el nº de póliza {eleccion} con identificador {id_siniestro}")
                                     lista.append(dSiniestro)
                                     return lista
+    else:
+        print("No se puede acceder a un identificador de póliza escrito.")
+        return id_siniestro, polizas   
 def ModificarSiniestro(siniestros:list) -> list:
     #barrer toda la lista de siniestros, comprobar que el id introducido sea igual que el del usuario y modificar según lo barrido:
     ID=[]
@@ -254,17 +257,13 @@ def ModificarSiniestro(siniestros:list) -> list:
                                 for subelto in elto:
                                     if subelto['id_siniestro']==modificar:
                                         print(f"Esta es el numero de poliza contrario anterior\n\n{subelto['nro_poliza_contrario']}")
-                            try:
-                                nuevoNumeroPoliza= int(input("Introduzca un nuevo numero de poliza >>> "))
-                            except:
-                                print("Error. El número de póliza debe ser un valor numérico.")
-                            else:
-                                for elto in siniestros:
-                                    for subelto in elto:
-                                        if subelto['id_siniestro']==modificar:
-                                            subelto['nro_poliza_contrario']=nuevoNumeroPoliza
-                                            print("Poliza contraria modificada.")
-                                            return siniestros                                
+                                        nuevoNumeroPoliza=input("Introduzca un nuevo numero de poliza >>> ")
+                                        for elto in siniestros:
+                                            for subelto in elto:
+                                                if subelto['id_siniestro']==modificar:
+                                                    subelto['nro_poliza_contrario']=nuevoNumeroPoliza
+                                                    print("Poliza contraria modificada.")
+                                                    return siniestros                                
                     case 'importe_pagar':
                         while True:
                             for elto in siniestros:
