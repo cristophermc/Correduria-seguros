@@ -43,3 +43,14 @@ pendiente la implementación de la validación de cada uno de los datos.
 ## 09/02/2025
 ### Acciones a considerar:
 1. Cuando una de las pólizas, tomadores, o recibos se eliminan del sistema, hay que actualizar los banlist (o eliminar la medida de las banlist por la implementación del recorrido antes de validar).
+
+### CAMBIO DE ESTADO - PROGRAMA TERMINADO
+## FASE PRUEBAS
+Se inicia ahora la fase de pruebas a fecha 11/02/2025. A considerar, realizar anotaciones de comprobaciones:
+1. Estructurales -> El código se puede adaptar al usuario de mejor manera.
+2. Semánticas -> El código debe tener sentido para con el trabajo a desempeñar.
+3. Optimizaciones -> El programa puede optimizarse mediante acciones en su estructura.
+4. Lógicas -> El programa hace lo que tiene que hacer y valida lo que tiene que validar.
+
+A tener en cuenta también la mejora en el archivo `Utilidades.py` en cuanto a las matrículas de la DGT.
+De resto, mirar código en busca de fallos conceptuales y lógicos. Revisión de variables.
