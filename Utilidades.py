@@ -91,7 +91,7 @@ def ComprobarMatricula(matricula:str) -> bool: # -> EN CONSTRUCCIÓN
         print("Error. Matrícula no circunscrita como válida.")
         return False
 def ComprobarIBAN(iban:str)->bool: #Función que transposiciona el IBAN introducido para calcular si el número de control es válido o no lo es mediante operaciones matemáticas modulares
-    #NControl - ESCC NNNN NNNN NNNN NNNN NNNN // ES91 2100 0418 4502 0005 1332 IBAN VÁLIDO
+    #NControl - ESCC NNNN NNNN NNNN NNNN NNNN // ES9121000418450200051332 IBAN VÁLIDO
     copiaNum=iban[2:4]
     iban_transpuesto = iban[4:] + '142800' 
     iban_transpuesto=int(iban_transpuesto)
