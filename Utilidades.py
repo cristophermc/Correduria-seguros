@@ -3,7 +3,8 @@ import random
 def ValidarDocumento(documento:str) -> bool:
     documento=documento.upper()
     letras_dni = ['T', 'R', 'W', 'A', 'G', 'M', 'Y', 'F', 'P', 'D', 'X', 'B', 'N', 'J', 'Z', 'S', 'Q', 'V', 'H', 'L', 'C', 'K', 'E']
- 
+    #DETALLES DE OPTIMIZACIÓN: letras_dni puede ser un string y podemos comparar a través del string - el acceso es mucho más rápido comparando en una variable que en una lista
+    #sin embargo esta acción se podría considerar hasta despreciable por el poco manejo de datos que tenemos en esta parte. Pero bueno, es una observación más cautelosa.
     if documento[-1].isalpha() and documento[0:8].isdigit() and len(documento)==9: #-> DNI
         print("Documento detectado: DNI o documentación para persona física.")
         print("Validando...")
@@ -112,16 +113,16 @@ def SerialSiniestro(numeradorSiniestro):
 def ComprobarCorreoElectronico(direccion:str) -> bool:
     direccion_antes_arroba = direccion.partition('@')
     direccion_despues_punto = direccion_antes_arroba[2].partition(".")
-    antes_arroba = direccion_antes_arroba[0]  # Parte antes de '@'
-    dominio = direccion_despues_punto[0]      # Parte entre '@' y '.'
-    extension = direccion_despues_punto[2]   # Parte después del '.'
+    antes_arroba = direccion_antes_arroba[0]  #Parte antes de '@'
+    dominio = direccion_despues_punto[0]      #Parte entre '@' y '.'
+    extension = direccion_despues_punto[2]   #Parte después del '.'
 
-    # Validar cada parte
+    #validamos cada parte
     if (len(antes_arroba) > 2 and len(antes_arroba) <= 28 and 
-        antes_arroba[0].isalpha() and              # La primera letra debe ser alfabética
-        dominio.isalpha() and                      # El dominio debe ser solo letras
+        antes_arroba[0].isalpha() and              #La primera letra debe ser alfabética
+        dominio.isalpha() and                      #El dominio debe ser solo letras
         len(extension) >= 2 and len(extension) <= 4 and 
-        extension.isalpha()):                      # La extensión debe ser solo letras
+        extension.isalpha()):                      #La extensión debe ser solo letras y rango 2-4
         print("Dirección válida.")
         return True
     else:

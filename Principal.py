@@ -27,6 +27,7 @@ from Siniestros import ModificarSiniestro
 from Utilidades import NumLiquidaciones
 from Liquidaciones import CrearLiquidacion
 from Liquidaciones import CerrarLiquidacion
+from Liquidaciones import ModificarLiquidacion
 #espacio para definición de funciones internas del programa / rutinas necesarias para consolidar los datos
 
 def DetectarDatosCarga():
@@ -77,10 +78,12 @@ def GuardarDatos(polizasRegistro, recibos, tomador, numeradorPoliza, numeradorRe
         return None
 if __name__=='__main__':
     os.chdir('./datos') #Cambiamos de directorio para controlar las entradas y salidas de datos / DIRECTORIO DE GUARDADO DE DATOS
-    datos_cargados=DetectarDatosCarga() #Procedemos a la carga opcional de datos 
+    datos_cargados=DetectarDatosCarga() #Procedemos a la carga opcional de datos / ACCION DE PERSISTENCIA
     if datos_cargados:
+        '''desempaquetamos los datos completamente y los cargamos en nuestro programa principal'''
         polizasRegistro, tomador, recibos, numeradorPoliza, numeradorRecibo, banlistPolizas, banlistTomadores, banlistRecibos, numeradorSiniestro, siniestros, numeradorLiquidaciones, liquidaciones = datos_cargados
     else:
+        '''si los datos no se cargan, creamos las estructuras de datos pertinentes'''
         polizasRegistro=[] #listado de pólizas que actualmente existen / o si no existen, directorio de guardado
         tomador=[]
         recibos=[]
@@ -94,7 +97,7 @@ if __name__=='__main__':
         banlistTomadores=[]
         banlistRecibos=[]
         
-    while True:
+    while True: #bucle principal del programa - incluye todas las subrutinas necesarias para el funcionamiento de la aplicación a modelo teórico
         print("----------------------------------------")
         print("\033[31mCorreduría 'Mi Coche Asegurado'.\033[0m")
         print()
@@ -304,8 +307,18 @@ if __name__=='__main__':
                                 print("No hay siniestros registrados.\nFormalice primero un siniestro.")
                                 break
                         case '2':
-                            pass
-                            break
+                            if siniestros and recibos and liquidaciones:
+                                liquidaciones=ModificarLiquidacion(liquidaciones, siniestros, recibos)
+                                break
+                            if not siniestros:
+                                print("No hay siniestros registrados para poder modificar en orden.")
+                                break
+                            if not recibos:
+                                print("No hay recibos al día para poder modificar.")
+                                break
+                            if not liquidaciones:
+                                print("No hay liquidaciones registradas en la base de datos.")
+                                break
                         case '3':
                             if not siniestros and not recibos and not liquidaciones:
                                 print("Error. Deben existir primeramente datos de siniestros, recibos y liquidaciones.")

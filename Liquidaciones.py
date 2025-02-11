@@ -205,10 +205,11 @@ def ModificarLiquidacion(liquidacion:list, siniestros:list, recibos:list)->list:
         importe_liquidacion=((importe_recibos_cobrados-importe_siniestros_pagados), importe_recibos_baja)
         for elto in liquidacion:
             for subelto in elto:
-                if subelto['nro_liquidacion']==seleccionLiquidacion:
+                if subelto['nro_liquidacion']==seleccionLiquidacion: #ACCEDEMOS
                     subelto['importe_liquidacion']=importe_liquidacion
                     subelto['fecha_liquidacion']=fecha_liquidacion
                     print("Al actualizarse la fecha de liquidación también se actualizan las posibles modificaciones en el importe de liquidación.")
+                    print("Datos actualizados")
                     return liquidacion, siniestros, recibos
     elif seleccionLiquidacion in PROHIBIDOS:
         print("Error. Esta póliza está cerrada y no es modificable. Volviendo al menú principal.")
