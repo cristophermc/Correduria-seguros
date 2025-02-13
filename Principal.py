@@ -30,7 +30,7 @@ from Liquidaciones import CerrarLiquidacion
 from Liquidaciones import ModificarLiquidacion
 #espacio para definición de funciones internas del programa / rutinas necesarias para consolidar los datos
 
-def DetectarDatosCarga():
+def DetectarDatosCarga()->list:
      if os.path.exists('../datos/guardado.gcs'):
           print("Detectado un punto de guardado con datos.")
           while True:
@@ -40,7 +40,7 @@ def DetectarDatosCarga():
                 carga = pickle.load(guardado)
                 return carga
             elif cargar == 'n':
-                print("Anulando la operación de cargado de datos.\nProcediendo al normal funcionamiento del programa.")
+                print("Anulando la operación de carga de datos.\nProcediendo al normal funcionamiento del programa.")
                 return None
             else:
                 print("Responda afirmativamente entre s o n.")
@@ -118,7 +118,6 @@ if __name__=='__main__':
                     elePolizas=input("Haga su elección escribiendo el número que corresponde a cada una de las opciones >>> ")
                     match elePolizas:
                         case '1':
-                                #Eliminar las lineas de abajo cuando implementemos la operación de tomador, la cual pasa parámetros a CrearPoliza /// Sugerida lista para registrar datos
                             if not tomador:
                                 print("Error. Deben haber tomadores registrados previamente en la base de datos.\n Volviendo al menú.")
                                 break
@@ -148,7 +147,7 @@ if __name__=='__main__':
 
                         case '3':
                             if polizasRegistro:
-                                polizasRegistro, banlistPolizas, tomador, banlistTomadores, recibos, banlistRecibos=EliminarPoliza(polizasRegistro, banlistPolizas, tomador, banlistTomadores, recibos, banlistRecibos)
+                                polizasRegistro, banlistPolizas, tomador, banlistTomadores, recibos, banlistRecibos, siniestros=EliminarPoliza(polizasRegistro, banlistPolizas, tomador, banlistTomadores, recibos, banlistRecibos, siniestros)
                                 
                             elif not polizasRegistro:
                                 #por ahora no hay nada, por tanto mandamos a crear
@@ -169,6 +168,7 @@ if __name__=='__main__':
                     print("Menú de tomadores")
                     print()
                     print(f"Tomadores registrados actualmente > {tomador}")
+                    print(banlistTomadores)
                     print("1. Crear tomador\n2. Modificar tomador\n3. Eliminar tomador\n4. Retorno a menú principal")
                     eleTomadores=input("Haga su elección escribiendo el número que corresponde a cada una de las opciones >>> ")
                     match eleTomadores:
@@ -188,12 +188,12 @@ if __name__=='__main__':
                             break
                         case '3':
                             if not polizasRegistro:
-                                tomador,polizasRegistro=EliminarTomador(tomador, polizasRegistro) 
+                                tomador,polizasRegistro, banlistTomadores, banlistPolizas=EliminarTomador(tomador, polizasRegistro, banlistTomadores, banlistPolizas) 
                                 break
                             if polizasRegistro:
                                 #Se pasa el tomador, y se devuelve una lista con el elemento eliminado.
                                 #También se debe eliminar el registro de una póliza.
-                                tomador, polizasRegistro=EliminarTomador(tomador, polizasRegistro)
+                                tomador, polizasRegistro, banlistTomadores, banlistPolizas=EliminarTomador(tomador, polizasRegistro, banlistTomadores, banlistPolizas)
                                 break                               
                         case '4':
                             print("Volviendo al menú principal.")
@@ -233,7 +233,7 @@ if __name__=='__main__':
                             if not recibos:
                                 print("No hay recibos registrados para modificar.")
                             else:
-                                recibos=ModificarRecibo(recibos, polizasRegistro)
+                                recibos, polizasRegistro=ModificarRecibo(recibos, polizasRegistro)
                                 break
                         case '3':
                             if not recibos:

@@ -42,7 +42,7 @@ def ValidarDocumento(documento:str) -> bool:
             else:
                 print("Error. El NIE no es válido.")
 
-    elif documento[-1].isalpha() and documento[0].isalpha() and documento[0] in 'JABCDEFGHI' and len(documento)==9 and documento[1:8].isdigit() and documento[-1] in 'JABCDEFGHI':
+    elif documento[0].isalpha() and documento[0] in 'JABCDEFGHI' and len(documento) == 9 and documento[1:8].isdigit() and (documento[-1].isdigit() or documento[-1] in 'JABCDEFGHI'):
         print("Documento detectado: NIF jurídico (Antiguo CIF).")
         print("Validando...")
             #reconvertimos la secuencia de números en una lista de enteros, trabajaremos con la lista más adelante.

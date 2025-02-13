@@ -25,7 +25,7 @@ def CrearSiniestro(id_siniestro:str, polizas:list) -> list:
                             if subelto['nro_poliza']==eleccion:
                                 if subelto['estado_poliza']=='Baja' and subelto['estado_poliza']=='PteCobro':
                                     print("Ha ocurrido un error. Se ha detectado que la póliza a la que se quiere asociar el siniestro\nestá de baja o pendiente de cobro. No se puede llevar a cabo esta operación. Volviendo al menú principal.")
-                                    return lista
+                                    return lista #VACIO
                                 else:
 
                                     print()
@@ -412,7 +412,7 @@ def EliminarSiniestro(siniestros:list)->list:
                             print("Volviendo al menú principal.")
                             return siniestros
                         else:
-                            print("Error. Solo se puede eliminar un siniestro que no esté vigente y liquidado.")
+                            print("Error. Solo se puede eliminar un siniestro que no esté vigente y en estado liquidado.")
                             return siniestros
             else:
                 print("Error. El siniestro al que se trata acceder no se encuentra registrado.")

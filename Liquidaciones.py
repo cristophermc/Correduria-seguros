@@ -148,7 +148,7 @@ def ModificarLiquidacion(liquidacion:list, siniestros:list, recibos:list)->list:
     print("Liquidaciones disponibles a modificar: ")
     for elto in LIQUIDACIONES:
         print(elto)
-    seleccionLiquidacion=input("Seleccione entre las liquidaciones disponibles >>> ")
+    seleccionLiquidacion=input("Seleccione entre las liquidaciones disponibles / Solo es posible modificar la fecha>>> ")
     if seleccionLiquidacion in LIQUIDACIONES:
         while True:
             fecha_liquidacion=input("Detalle la fecha de liquidación en el siguiente formato (DD/MM/AAAA) en el año 2025>>> ")
@@ -160,63 +160,20 @@ def ModificarLiquidacion(liquidacion:list, siniestros:list, recibos:list)->list:
                     listaAux.append(elto)
                 if listaAux[0]>=1 and listaAux[0]<=31 and listaAux[1]>=1 and listaAux[1]<=12 and listaAux[2]==2025:
                     print("Fecha de liquidación válida. Registrando...")
-                    break
+                    for elto in liquidacion:
+                        for subelto in elto:
+                            if subelto['nro_liquidacion']==seleccionLiquidacion:
+                                subelto['fecha_liquidacion']=fecha_liquidacion
+                                return liquidacion
             else:
                 print("Error. La fecha de nacimiento introducida no es válida. Por favor, introduzca una fecha en el formato DD/MM/AAAA.")
                 continue
-        importe_recibos_cobrados=0 #inicialización a 0 y vamos a barrer en breves
-        for elto in recibos: #entiendo que para barrer en busca de cobrados hay que moverse por recibos - iteramos y buscamos coincidencias | si las hay, mandamos a incrementar
-            for subelto in elto:
-                if (subelto['estado_recibo']=='C' or subelto['estado_recibo'=='CB']) and subelto['estado_liquidacion']=='Pendiente':
-                    importe_recibos_cobrados+=subelto['importe_cobrar']
-        lista_recibos_liquidar=[] #inicializamos una lista vacía
-        #se obtiene filtrando aquellos recibos que han sido cobrados por la correduría, 
-        # pero que aún no han sido liquidados a la aseguradora.
-        for elto in recibos: 
-            for subelto in elto:
-                if (subelto['estado_recibo']=='C' or subelto['estado_recibo'=='CB']) and subelto['estado_liquidacion']=='Pendiente':
-                    elementos_liquidar=(subelto['nro_poliza'], subelto['id_recibo'])
-                    lista_recibos_liquidar.append(elementos_liquidar)
-        #2º
-        importe_recibos_baja=0
-        for elto in recibos:
-            for subelto in elto:
-                if subelto['estado_recibo']=='B' and subelto['estado_liquidacion']=='Pendiente':
-                    importe_recibos_baja+=subelto['importe_pagar']
-        lista_recibos_baja=[]
-        for elto in recibos:
-            for subelto in elto:
-                if subelto['estado_recibo']=='B' and subelto['estado_liquidacion']=='Pendiente':
-                    elementos_liquidar_baja=(subelto['nro_poliza'], subelto['id_recibo'])
-                    lista_recibos_baja.append(elementos_liquidar_baja)
-        #3º 
-        importe_siniestros_pagados=0 #Ahora nos movemos por siniestros y bajo las condiciones de PA y P en estado_siniestro y estado_liquidacion, extraemos el importe_pagar e incrementamos
-        for elto in siniestros:
-            for subelto in elto:
-                if subelto['estado_siniestro']=='PA' and subelto['estado_liquidacion']=='P':
-                    importe_siniestros_pagados+=subelto['importe_pagar']
-        lista_siniestros_pagados=[]
-        for elto in siniestros:
-            for subelto in elto:
-                if subelto['estado_siniestro']=='PA' and subelto['estado_liquidacion']=='P':
-                    elementos_siniestros_liquidar=(subelto['nro_poliza'], subelto['id_siniestro'])
-                    lista_siniestros_pagados.append(elementos_siniestros_liquidar)
-        #CALCULO DE LIQUIDACION ( (1) - (3), (2) )
-        importe_liquidacion=((importe_recibos_cobrados-importe_siniestros_pagados), importe_recibos_baja)
-        for elto in liquidacion:
-            for subelto in elto:
-                if subelto['nro_liquidacion']==seleccionLiquidacion: #ACCEDEMOS
-                    subelto['importe_liquidacion']=importe_liquidacion
-                    subelto['fecha_liquidacion']=fecha_liquidacion
-                    print("Al actualizarse la fecha de liquidación también se actualizan las posibles modificaciones en el importe de liquidación.")
-                    print("Datos actualizados")
-                    return liquidacion, siniestros, recibos
     elif seleccionLiquidacion in PROHIBIDOS:
         print("Error. Esta póliza está cerrada y no es modificable. Volviendo al menú principal.")
-        return liquidacion, siniestros, recibos
+        return liquidacion
     else:
         print("No se ha encontrado el id de la liquidación. Volviendo al menú principal.")
-        return liquidacion, siniestros, recibos   
+        return liquidacion  
 ##El siguiente paso ahora es cerrar la liquidación, lo que significa mandar un mensaje al usuario para que confirme y, además, 
 #se debe hacer antes del return
 def CerrarLiquidacion(recibos:list, siniestros:list, liquidaciones:list)->list:

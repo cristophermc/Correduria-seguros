@@ -1,18 +1,14 @@
 #Cristopher Méndez Cervantes | Ángel Cristo Castro Martín
 from Utilidades import ValidarDocumento
 from Utilidades import ComprobarCorreoElectronico
-
-#Separador -- - - - - - -- - - - 
-
-'''Tendrá opciones para crear, modificar y eliminar a un tomador 
-Cosas a tener en cuenta: 
-•No se permiten tomadores con igual identificación. 
-•En la opción modificar no se permite cambiar el identificador del tomador. 
-•No se podrá eliminar un tomador que tenga alguna póliza vigente. 
-•Si se puede borrar un tomador, se deben borrar todos los datos asociados a las 
-pólizas que el tenía contratadas. 
-'''
 def CrearTomador(banlist:list) -> list:
+    '''Función que permite al usuario de manera interactiva crear un tomador
+    recogiéndose también información para futuras inserciones. Debe cumplirse 
+    las restricción de que los tomadores son ÚNICOS. 
+    
+    En ese sentido, banlist es una LISTA que recoge los diferentes ID de los tomadores 
+    para evitar duplicidad.
+    '''
     encontrado=False
 
     listaTomador=[]
@@ -124,15 +120,17 @@ def CrearTomador(banlist:list) -> list:
 
     listaTomador.append(dTomador)
     return listaTomador
-def ModificarTomador(listaTomador):
+def ModificarTomador(listaTomador:list)->list:
+    '''Función que barre en la lista de tomadores buscando la modificación de los datos MANTENIENDO 
+    la restricción de no poder modificarse el campo de id_tomador.'''
     print("Bienvenido/a a la opción de modificar tomadores.")
 
-    # Validar si hay datos
+    #validación por si no hay datos
     if not listaTomador:
         print("No hay tomadores registrados para modificar.")
         return listaTomador
 
-    # Crear lista de IDs y lista de campos únicos excluyendo 'id_tomador'
+    #creamos la lista de IDs y lista de campos únicos excluyendo 'id_tomador'
     ID = []
     CAMPOS = []
 
@@ -154,14 +152,14 @@ def ModificarTomador(listaTomador):
 
         id_tomador = input("Ingrese el ID (DNI|NIE|CIF) que desea modificar de manera literal: ").upper()
 
-        # Comprobar si el ID está en la lista
+        #comprobamos que el ID esté en la lista que nos hemos preparado:
         if id_tomador in ID:
             print(f"Tomador encontrado con ID: {id_tomador}")
             print(f"Esta es la lista de campos disponibles para modificar:")
             for campo in CAMPOS:
                 print(f"- {campo}")
 
-            # Elegir el campo a modificar
+            #a partir de ahora el usuario elige el campo que quiere modificar CUMPLIENDO con la restricción de no poder modificar el campo de id.
             elegir_campo = input("Escriba de manera literal el nombre de uno de estos campos para MODIFICARLO >>> ")
             if elegir_campo in CAMPOS:  # Verificar si el campo es válido
                 for elto in listaTomador:
@@ -240,14 +238,20 @@ def ModificarTomador(listaTomador):
         else:
             print("Error: El ID ingresado no está registrado. Intente nuevamente.")
             return listaTomador
-def EliminarTomador(listaTomador, listaPolizas):
+def EliminarTomador(listaTomador:list, listaPolizas:list, banlistTomadores:list, banlistPolizas:list)->list:
+    '''Función que trata de eliminar un tomador siempre y cuando se cumpla que:
+    1. No tenga una póliza vigente (!= baja)
+    2. Si se puede borrar un tomador (es decir, aquellos tomadores que tengan pólizas asociadas de baja), se eliminan los
+    datos también de las pólizas asociadas a éste.'''
+
     print("Bienvenido/a a la opción de eliminar tomadores.")
     ID=[]
     listaTomador
     listaPolizas
+    encontrado=False
     if not listaTomador:
         print("Error. Se necesita crear un registro de tomador primeramente.")
-        return listaTomador, listaPolizas
+        return listaTomador, listaPolizas, banlistTomadores, banlistPolizas
     if not listaPolizas:
         for elto in listaTomador:
             for subelto in elto:
@@ -261,9 +265,14 @@ def EliminarTomador(listaTomador, listaPolizas):
                 for subelto in elto:
                     if subelto['id_tomador'] == id_tomador:
                         listaTomador.remove(elto)
-                        return listaTomador, listaPolizas
-    if listaPolizas:
-        while True:
+                        print(f"Se ha eliminado el tomador con identificador {id_tomador} correctamente.\nVolviendo al menú principal.")
+                        for elto in banlistTomadores:
+                            if id_tomador in elto:
+                                banlistTomadores.remove(id_tomador) #actualizamos la lista de prohibidos
+                                break
+                        return listaTomador, listaPolizas, banlistTomadores, banlistPolizas
+    if listaPolizas: #si la lista de Polizas está llena de datos, tenemos que barrer y ver si al menos el tomador que tenemos registrado tiene una póliza asociada. Si es el caso, no se puede borrar
+        while True: #BARREMOS BUSCANDO JUSTO LO CONTRARIO, QUE EL TOMADOR TENGA PÓLIZA DE BAJA PARA ELIMINARLO.
             if listaTomador:
                 for elto in listaTomador:
                     for subelto in elto:
@@ -278,19 +287,22 @@ def EliminarTomador(listaTomador, listaPolizas):
                             if subelto['id_tomador'] == id_tomador:
                                 if subelto['estado_poliza'] == 'Baja':
                                     listaPolizas.remove(elto)
-                            else:
-                                print("No se ha conseguido emparejar datos asociados.")
-                                continue
-                    for elto in listaTomador:
-                        for subelto in elto:
-                            if subelto['id_tomador'] == id_tomador:
-                                listaTomador.remove(elto)
-                            else:
-                                print("No se ha conseguido emparejar datos asociados.")
-                                continue
-                    print("Eliminados los registros coincidentes y en estado de BAJA.")
-                    return listaPolizas,listaPolizas
+                                    banlistPolizas.remove(id_tomador)
+                                    encontrado=True #activamos el flag para que controlemos la lógica de borrado si es de baja
+                    if encontrado:        
+                        for elto in listaTomador: #se elimina también el registro del tomador en su respectivo almacén de datos
+                            for subelto in elto:
+                                if subelto['id_tomador'] == id_tomador:
+                                    listaTomador.remove(elto)
+                                    banlistTomadores.remove(id_tomador)#y actualizamos también el registro de tomadores prohibidos
+                        print("Eliminados los registros coincidentes y en estado de BAJA en las listas de tomadores y pólizas.")
+                        return listaTomador, listaPolizas, banlistTomadores, banlistPolizas
+                    if not encontrado:
+                        print("Se ha encontrado que este tomador tiene una póliza aún vigente o puede no estar asociada a ninguna.\nSolo se pueden eliminar pólizas que estén de baja (Póliza vigente).")
+                        return listaTomador, listaPolizas, banlistTomadores, banlistPolizas #
                 else:
-                    print("El id del tomador no coincide con los impresos anteriormente.")
-                    continue
+                    print("El id del tomador no coincide con los impresos anteriormente. Volviendo al menú principal.")
+                    return listaTomador, listaPolizas, banlistTomadores, banlistPolizas #
 
+##////////////////////////////////////////////////////////////////////////////////////////////////////7
+'''HA PASADO EL TEST DE PRUEBAS ADECUADAMENTE CON UNA GRAN COLECCIÓN DE DATOS'''

@@ -151,7 +151,7 @@ def CrearRecibo(id_recibo:int, banlist:list, polizas:list) -> list:
 
         print(f"Recibo creado con identificador {id_recibo}")
         return lista
-def ModificarRecibo(lista_recibos: list) -> list:
+def ModificarRecibo(lista_recibos: list, polizas:list) -> list:
     CAMPOS=[]
     nroPol=[]
     duraciones = ('A', 'S', 'T', 'M')
@@ -177,13 +177,17 @@ def ModificarRecibo(lista_recibos: list) -> list:
             for subelto in elto:
                 ID.append(subelto['id_recibo'])
                 print(f"- {subelto['id_recibo']}", end=' ')
-
+            
+        print()
         print("Seleccione un recibo que quiera MODIFICAR: ")
-        seleccionarID=int(input(">>> "))
+        seleccionarID=input(">>> ")
         if seleccionarID in ID: #Nos aseguramos de que el ID esté entre los datos cotejados.
             print(f"Se ha seleccionado el recibo con identificador {seleccionarID}")
             while True:
+                print()
+                print()
                 print("\nSeleccione el campo que desea MODIFICAR:")
+                print()
                 for campo in CAMPOS:
                     print(f"- {campo}", end=' ')
                 seleccionarCampo=input(">>> ").lower()
@@ -195,21 +199,21 @@ def ModificarRecibo(lista_recibos: list) -> list:
                                 for subelto in elto:
                                     if subelto['id_recibo']==seleccionarID:
                                         print(subelto['nro_poliza'])
-                                    else:
-                                        print("No hay números de póliza registrados para este recibo.")
-                                        continue
                             print("Posibles cambios: ")
+                            for elto in polizas:
+                                for subelto in elto:
+                                    if subelto['nro_poliza']!=seleccionarID and subelto['nro_poliza'] not in nroPol:
+                                        nroPol.append(subelto['nro_poliza'])
                             for nro in nroPol: 
                                 print(f"- {nro}", end=' ')
-                            nuevaPoliza=int(input("Escriba el nuevo número de póliza >>> "))
+                            nuevaPoliza=input("Escriba el nuevo número de póliza >>> ")
                             if nuevaPoliza in nroPol: #Nos aseguramos de que el nuevo número de póliza esté entre los datos cotejados.
                                 for elto in lista_recibos:
                                     for subelto in elto:
                                         if subelto['id_recibo']==seleccionarID:
                                             subelto['nro_poliza']=nuevaPoliza
-                            
                                 print("Recibo modificado.")
-                                return lista_recibos
+                                return lista_recibos, polizas
                             else:
                                 print("Error. El número de póliza introducido no se encuentra en la lista.")
                         case 'fecha_inicio':
@@ -218,9 +222,6 @@ def ModificarRecibo(lista_recibos: list) -> list:
                                 for subelto in elto:
                                     if subelto['id_recibo']==seleccionarID:
                                         print(subelto['fecha_inicio'])
-                                    else:
-                                        print("No hay fechas de inicio registradas para este recibo.")
-                                        continue
                             cambioFecha=input("Introduzca una nueva fecha: ")
                             if len(cambioFecha)==10 and cambioFecha[2]=='/' and cambioFecha[5]=='/' and cambioFecha[:2].isdigit() and cambioFecha[3:5].isdigit() and cambioFecha[6:].isdigit():
                                 fechaCam=cambioFecha.split('/')
@@ -235,10 +236,10 @@ def ModificarRecibo(lista_recibos: list) -> list:
                                             if subelto['id_recibo']==seleccionarID:
                                                 subelto['fecha_inicio']=cambioFecha
                                     print("Fecha de inicio cambiada. \nRecibo modificado.")
-                                    return lista_recibos
+                                    return lista_recibos, polizas
                             else:
                                 print("Error. La fecha de inicio introducida no es válida. Por favor, introduzca una fecha en el formato DD/MM/AAAA.")
-                                continue
+                                return lista_recibos, polizas
 
                         case 'duracion':
                             print("Antiguos datos de duración: ")
@@ -246,27 +247,25 @@ def ModificarRecibo(lista_recibos: list) -> list:
                                 for subelto in elto:
                                     if subelto['id_recibo']==seleccionarID:
                                         print(f"Duración: {subelto['duracion']}")
-                                    else:
-                                        print("No hay duraciones registradas para este recibo.")
-                                        continue
+        
                             cambioDuracion=input(f"Seleccione una nueva duración entre {duraciones} >>> ")
                             if cambioDuracion in duraciones:
                                 for elto in lista_recibos:
                                     for subelto in elto:
                                         if subelto['id_recibo']==seleccionarID:
                                             subelto['duracion']=cambioDuracion
+                                            print("Datos de duración modificados.")
+                                            return lista_recibos, polizas
                             else:
                                 print("El cambio sugerido no se encuentra entre las opciones disponibles.")
-                                continue
+                                return lista_recibos, polizas
                         case 'importe_cobrar':
                             print("Antiguos datos del importe: ")
                             for elto in lista_recibos:
                                 for subelto in elto:
                                     if subelto['id_recibo']==seleccionarID:
                                         print(f"Importe a cobrar: {subelto['importe_cobrar']}")
-                                    else:
-                                        print("No hay importes registrados para este recibo.")
-                                        continue
+
                             cambioImporte=float(input("Introduzca un nuevo importe a cobrar >>> "))
                             if cambioImporte >= 0:
                                 print("Importe válido. Registrando...")
@@ -275,19 +274,16 @@ def ModificarRecibo(lista_recibos: list) -> list:
                                         if subelto['id_recibo']==seleccionarID:
                                             subelto['importe_cobrar']=cambioImporte
                                             print("Importe cambiado.")
-                                            return lista_recibos
+                                            return lista_recibos, polizas
                             else:
                                 print("Error. El importe debe ser superior a 0.")
-                                continue
+                                return lista_recibos, polizas
                         case 'fecha_cobro':
                             print("Antigua fecha de inicio")
                             for elto in lista_recibos:
                                 for subelto in elto:
                                     if subelto['id_recibo']==seleccionarID:
                                         print(subelto['fecha_cobro'])
-                                    else:
-                                        print("No hay fechas de cobro registradas para este recibo.")
-                                        continue
                             cambioFecha=input("Introduzca una nueva fecha: ")
                             if len(cambioFecha)==10 and cambioFecha[2]=='/' and cambioFecha[5]=='/' and cambioFecha[:2].isdigit() and cambioFecha[3:5].isdigit() and cambioFecha[6:].isdigit():
                                 fechaCam=cambioFecha.split('/')
@@ -302,19 +298,16 @@ def ModificarRecibo(lista_recibos: list) -> list:
                                             if subelto['id_recibo']==seleccionarID:
                                                 subelto['fecha_cobro']=cambioFecha
                                     print("Fecha de cobro cambiada. \nRecibo modificado.")
-                                    return lista_recibos
+                                    return lista_recibos, polizas
                             else:
                                 print("Error. La fecha de cobro introducida no es válida. Por favor, introduzca una fecha en el formato DD/MM/AAAA.")
-                                continue
+                                return lista_recibos, polizas
                         case 'estado_recibo':
                             print("Antiguo estado del recibo: ")
                             for elto in lista_recibos:
                                 for subelto in elto:
                                     if subelto['id_recibo']==seleccionarID:
                                         print(subelto['estado_recibo'])
-                                    else:
-                                        print("No hay estados registrados para este recibo.")
-                                        continue
                             cambioEstado=input(f"Introduzca un nuevo estado entre los siguientes {estadosrecibos}: ")
                             if cambioEstado in estadosrecibos:
                                 for elto in lista_recibos:
@@ -322,23 +315,16 @@ def ModificarRecibo(lista_recibos: list) -> list:
                                         if subelto['id_recibo']==seleccionarID:
                                             subelto['estado_recibo']=cambioEstado
                                             print("Estado cambiado.\nRecibo modificado.")
-                                            return lista_recibos
-                                        else:
-                                             print("No se ha encontrado el recibo con ese ID.")
-                                             continue
-                       
+                                            return lista_recibos, polizas
                             else:
                                 print("El cambio sugerido no se encuentra entre las opciones disponibles.")
-                                continue
+                                return lista_recibos, polizas
                         case 'importe_pagar':
                             print("Antiguo importe a pagar:")
                             for elto in lista_recibos:
                                 for subelto in elto:
                                     if subelto['id_recibo']==seleccionarID:
                                         print(subelto['importe_pagar'])
-                                    else:
-                                        print("No hay importes a pagar para este recibo.")
-                                        continue
                             cambioImportePagar=float(input("Introduzca un nuevo importe a pagar >>> "))
                             if cambioImportePagar >= 0:
                                 print("Importe válido. Registrando...")
@@ -347,19 +333,16 @@ def ModificarRecibo(lista_recibos: list) -> list:
                                         if subelto['id_recibo']==seleccionarID:
                                             subelto['importe_pagar']=cambioImportePagar
                                             print("Importe a pagar cambiado.")
-                                            return lista_recibos
+                                            return lista_recibos, polizas
                             else:
                                 print("Error. El importe debe ser superior a 0.")
-                                continue
+                                return lista_recibos, polizas
                         case 'estado_liquidacion':
                             print("Antiguo estado de liquidación: ")
                             for elto in lista_recibos:
                                 for subelto in elto:
                                     if subelto['id_recibo']==seleccionarID:
                                         print(subelto['estado_liquidacion'])
-                                    else:
-                                        print("No hay estados registrados para este recibo.")
-                                        continue
                             cambioEstadoLiquidacion=input(f"Introduzca un nuevo estado entre los siguientes {estadosliquidacion}: ")
                             if cambioEstadoLiquidacion in estadosliquidacion:
                                 for elto in lista_recibos:
@@ -367,23 +350,17 @@ def ModificarRecibo(lista_recibos: list) -> list:
                                         if subelto['id_recibo']==seleccionarID:
                                             subelto['estado_liquidacion']=cambioEstadoLiquidacion
                                             print("Estado cambiado.\nRecibo modificado.")
-                                            return lista_recibos
-                                        else:
-                                             print("No se ha encontrado el recibo con ese ID.")
-                                             continue
+                                            return lista_recibos, polizas
                        
                             else:
                                 print("El cambio sugerido no se encuentra entre las opciones disponibles.")
-                                continue
+                                return lista_recibos, polizas
                         case 'fecha_liquidacion':
                             print("Antigua fecha de liquidacion:")
                             for elto in lista_recibos:
                                 for subelto in elto:
                                     if subelto['id_recibo']==seleccionarID:
                                         print(subelto['fecha_liquidacion'])
-                                    else:
-                                        print("No hay fechas de liquidacion registradas para este recibo.")
-                                        continue
                             cambioFecha=input("Introduzca una nueva fecha: ")
                             if len(cambioFecha)==10 and cambioFecha[2]=='/' and cambioFecha[5]=='/' and cambioFecha[:2].isdigit() and cambioFecha[3:5].isdigit() and cambioFecha[6:].isdigit():
                                 fechaCam=cambioFecha.split('/')
@@ -398,14 +375,15 @@ def ModificarRecibo(lista_recibos: list) -> list:
                                             if subelto['id_recibo']==seleccionarID:
                                                 subelto['fecha_liquidacion']=cambioFecha
                                     print("Fecha de liquidacion cambiada. \nRecibo modificado.")
-                                    return lista_recibos
+                                    return lista_recibos, polizas
                             else:
                                 print("Error. La fecha de cobro introducida no es válida. Por favor, introduzca una fecha en el formato DD/MM/AAAA.")
-                                continue
+                                return lista_recibos, polizas
                 elif seleccionarCampo == ' ':
                     print("No es posible introducir un campo vacío. Por favor escriba datos.")
+                    continue
                 else:
-                    print("Error. El campo escrito no se encuentra entre las opciones disponibles.")
+                    print("Error. El campo escrito no se encuentra entre las opciones disponibles")
                     continue
 def EliminarRecibo(listaRecibos: list) -> list:
     print("Bienvenido/a al asistente para eliminar recibos.")
