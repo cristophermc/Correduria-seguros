@@ -1,6 +1,8 @@
 #Cristopher Méndez Cervantes | Ángel Cristo Castro Martín
 from Utilidades import ComprobarMatricula
 def CrearSiniestro(id_siniestro:str, polizas:list) -> list:
+    '''Los siniestros son creados mediante esta funcion, respetando las normas impuestas por el enunciado. 
+    Coge un ID poliza y si existe, se crea un siniestro'''
     lista=[]
     print("Primero seleccione un ID de póliza sobre la cual formalizar el siniestro.")
     print("Escoja el número de póliza sobre el cual crear un recibo asociado.")
@@ -13,7 +15,6 @@ def CrearSiniestro(id_siniestro:str, polizas:list) -> list:
             IDpolizas.append(subelto['nro_poliza'])
     print()
     eleccion=input(">>>")
-    # global nro_poliza
     if eleccion in IDpolizas:
         for elto in polizas:
             for subelto in elto:
@@ -170,6 +171,9 @@ def CrearSiniestro(id_siniestro:str, polizas:list) -> list:
         print("No se puede acceder a un identificador de póliza escrito.")
         return id_siniestro, polizas   
 def ModificarSiniestro(siniestros:list) -> list:
+    '''Funcion de modificar un siniestro mediante validaciones y entrada y acceso a datos
+    Tenemos listas ID y CAMPOS para guardar los id existentes y los campos que se pueden seleccionar
+    luego accedemos y cambiamos en cada caso'''
     #barrer toda la lista de siniestros, comprobar que el id introducido sea igual que el del usuario y modificar según lo barrido:
     ID=[]
     CAMPOS=[]
@@ -198,8 +202,8 @@ def ModificarSiniestro(siniestros:list) -> list:
             campo=input("Seleccione uno de los campos a continuación: ")
             if campo in CAMPOS: #Si la elección se encuentra en uno de los campos: 
                 match campo:
-                    case 'nro_poliza': #PREGUNTAR A REINALDO SI ESTO SE PUEDE HACER Y COMO IMPLEMENTARLO
-                        pass
+                    case 'nro_poliza':
+                        print("El número de póliza no se puede actualizar.")
                     case 'descripcion':
                         while True:
                             for elto in siniestros:
@@ -374,13 +378,10 @@ def ModificarSiniestro(siniestros:list) -> list:
                                         print("Error en el formato.")
                             else:
                                 print("Error en el formato.")
-
-        #Modificamos los datos según el que hemos introducido como usuarios
-        # for elto in siniestros:
-        #     for subelto in elto:
-        #         if subelto['id_siniestro'] == modificar:#Nos metemos dentro del seleccionado
-        #             pass
 def EliminarSiniestro(siniestros:list)->list:
+    '''Funcion para eliminar un siniestro teniendo en cuenta las limitaciones del ejercicio. Tenemos
+    los campos ID y preguntamos si al menos existen siniestros. Si existen, empezamos a barrer. El usuario
+    elige y luego validamos a ver si borramos aquellos siniestros en los estados PA y L'''
     #Barrer la lista de siniestros que hay y comprobar:
     '''No se puede eliminar un siniestro vigente, 
     independientemente de su estado.

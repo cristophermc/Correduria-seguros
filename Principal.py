@@ -17,13 +17,13 @@ from Recibos import EliminarRecibo
 from Utilidades import SerialPoliza
 from Utilidades import SerialRecibo
 from Utilidades import SerialSiniestro
-from Siniestros import CrearSiniestro
 from Utilidades import RecogerBanlistPolizas
 from Utilidades import RecogerBanlistTomador
 from Utilidades import RecogerBanlistRecibo
 from Utilidades import NumSiniestro
-from Siniestros import EliminarSiniestro
+from Siniestros import CrearSiniestro
 from Siniestros import ModificarSiniestro
+from Siniestros import EliminarSiniestro
 from Utilidades import NumLiquidaciones
 from Liquidaciones import CrearLiquidacion
 from Liquidaciones import CerrarLiquidacion
@@ -31,6 +31,9 @@ from Liquidaciones import ModificarLiquidacion
 #espacio para definición de funciones internas del programa / rutinas necesarias para consolidar los datos
 
 def DetectarDatosCarga()->list:
+     '''funcion implementada en el programa principal para la deteccion de datos de carga. El usuario elige si 
+     quiere cargar o no los datos detectados desde el directorio de /datos cogiendo el archivo guardado.gcs
+     (.gcs quiere decir GUARDADO CORREDURIA SEGUROS) - devuelve listas'''
      if os.path.exists('../datos/guardado.gcs'):
           print("Detectado un punto de guardado con datos.")
           while True:
@@ -47,12 +50,13 @@ def DetectarDatosCarga()->list:
      else:
           print("Archivos de guardado no encontrados en el sistema de archivos.\nProcediendo al normal funcionamiento del programa.")
           return None
-def GuardarDatos(polizasRegistro, recibos, tomador, numeradorPoliza, numeradorRecibo, banlistPolizas, banlistTomadores, banlistRecibos, numeradorSiniestro, siniestros, numeradorLiquidaciones, liquidaciones):  # MÁS PARÁMETROS EN UN FUTURO
+def GuardarDatos(polizasRegistro, recibos, tomador, numeradorPoliza, numeradorRecibo, banlistPolizas, banlistTomadores, banlistRecibos, numeradorSiniestro, siniestros, numeradorLiquidaciones, liquidaciones):  
+    '''funcion que permite guardar y serializar los datos'''
     #definimos la ruta base del directorio
     ruta_datos = '../datos'
-    ruta_archivo = os.path.join(ruta_datos, 'guardado.gcs')  # Ruta completa del archivo
+    ruta_archivo = os.path.join(ruta_datos, 'guardado.gcs')  #Ruta completa del archivo
 
-    if os.path.exists(ruta_datos):  # Verificamos si existe el directorio
+    if os.path.exists(ruta_datos):  #Verificamos si existe el directorio
         print("Proceso de guardado de datos seleccionado.")
         print(f"Haciendo copia de seguridad de todos los datos en el sistema de ficheros en el directorio {ruta_datos}.")
 
@@ -99,13 +103,13 @@ if __name__=='__main__':
         
     while True: #bucle principal del programa - incluye todas las subrutinas necesarias para el funcionamiento de la aplicación a modelo teórico
         print("----------------------------------------")
-        print("\033[31mCorreduría 'Mi Coche Asegurado'.\033[0m")
-        print()
-        print("Menú Principal")
-        print("...")
-        print("...")
-        print(f"1. Pólizas\n2. Tomadores\n3. Recibos\n4. Siniestros\n5. Liquidaciones\n6. Estadísticas\n7. Guardado de datos\n9. Salir")
-        print()
+        print("\033[31mCorreduría 'Mi Coche Asegurado'\033[0m")
+        print(".----------------.")
+        print("|\033[35m Menú Principal\033[0m |")
+        print("'----------------'")
+        print(" ┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅")
+        print(f"┇ \033[94m1. ★  Pólizas\033[0m           ┇\n┇ \033[92m2. ⬤  Tomadores\033[0m         ┇\n┇ \033[93m3. €  Recibos\033[0m           ┇\n┇ \033[91m4. ⚠  Siniestros\033[0m        ┇\n┇ \033[95m5. ✉  Liquidaciones\033[0m     ┇\n┇ \033[96m6. 🛈  Estadísticas\033[0m      ┇\n┇ \033[38;5;214m7. ❂  Guardado de datos\033[0m ┇\n┇ \033[38;5;130m9. ⏏  Salir\033[0m             ┇")
+        print(" ┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅")
         eleccion=input("Haga su elección escribiendo el número figurado en cada una de las opciones listadas anteriormente >>> ")
         match eleccion:
             case '1':
@@ -206,7 +210,6 @@ if __name__=='__main__':
                     print("------------------")
                     print("Menú de recibos")
                     print()
-                    print(banlistRecibos)
                     print("1. Crear recibo\n2. Modificar recibo\n3. Eliminar recibo\n4. Retorno a menú principal")
                     print(f"Recibos creados actualmente >>> {recibos}")
                     eleRecibo = input("Haga su elección escribiendo el número que corresponde a cada una de las opciones >>> ")
@@ -340,15 +343,16 @@ if __name__=='__main__':
                             if polizasRegistro: #si hay polizas
                                 estadisticasPolizas(polizasRegistro)
                             else:
-                                print("No hay pólizas registradas.\n Deberá primero formalizar una.")
+                                print("No hay pólizas registradas.\n Deberá primero formalizar una.\nVolviendo al menú principal.")
                                 break
                         case '2':
                             if liquidaciones:
                                 estadisticasLiquidaciones(liquidaciones)
                             else:
-                                print("No hay liquidaciones creadas todavía.")
+                                print("No hay liquidaciones creadas todavía.\nVolviendo al menú principal.")
                                 break
                         case '3':
+                            print("Volviendo al menú principal.")
                             break
 
                         case _:

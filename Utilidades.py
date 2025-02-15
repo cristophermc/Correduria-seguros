@@ -1,6 +1,6 @@
 #Cristopher Méndez Cervantes | Ángel Cristo Castro Martín
-import random
 def ValidarDocumento(documento:str) -> bool:
+    '''Función que implementa la validación de documentos DNI|NIE|CIF mediante tres algoritmos distintos'''
     documento=documento.upper()
     letras_dni = ['T', 'R', 'W', 'A', 'G', 'M', 'Y', 'F', 'P', 'D', 'X', 'B', 'N', 'J', 'Z', 'S', 'Q', 'V', 'H', 'L', 'C', 'K', 'E']
     #DETALLES DE OPTIMIZACIÓN: letras_dni puede ser un string y podemos comparar a través del string - el acceso es mucho más rápido comparando en una variable que en una lista
@@ -58,7 +58,7 @@ def ValidarDocumento(documento:str) -> bool:
         for i in range(0,7,2):
             a+=lista_aux[i]
         b=0
-        for i in range(1,7,2):
+        for i in range(1,7,2): #Luego multiplicamos en posiciones impares y recalculamos modularmente
             varAuxiliar=2*lista_aux[i]
             if varAuxiliar>9:
                 b += (varAuxiliar % 10) + (varAuxiliar // 10)
@@ -67,31 +67,36 @@ def ValidarDocumento(documento:str) -> bool:
                 
             #El algoritmo implica sumar A y B y el resultado es C
         c=a+b
-        d=10-(c%10)
+        d=10-(c%10) #d se saca  de restar 10 al módulo 10 de c
         if d==10:
             d=0
         if documento[-1].isdigit() and int(documento[-1]) == d:
-            print(f"El NIF para personas físicas {documento} es válido.")
+            print(f"El NIF para personas jurídicas (CIF) {documento} es válido.")
             return True
             
-        elif documento[-1].isalpha() and documento[-1] == tablaComparacion[d]:
-            print(f"El NIF para personas físicas {documento} es válido.")
+        elif documento[-1].isalpha() and documento[-1] == tablaComparacion[d]: #validamos comprobando si la letra encaja en la posicion de la letra en la tabla
+            print(f"El NIF para personas jurídicas (CIF) {documento} es válido.")
             return True
         else:
             print("NIF (CIF) jurídico inválido.")
-            #Ahora se hace el módulo de 10 de c para restarle a 10, eso es D, quien marca el número de control del documento
-def ComprobarMatricula(matricula:str) -> bool: # -> EN CONSTRUCCIÓN
+def ComprobarMatricula(matricula:str) -> bool:
+    '''Funcion que comprueba matriculas normales de la DGT y ciclomotores mediante
+    slicing y validaciones lógicas'''
     print("Comprobando matrícula introducida...")
     if len(matricula)==7 and matricula[0:4].isdigit() and matricula[4:].isalpha() and matricula[4:] not in "ÑQ": #->Caso de matrícula ordinaria
         print("Matrícula identificada como 'Normal | Taxis y 'VTC'.")
         return True
-    elif len(matricula)==7 and matricula[0:1].isalpha() and matricula[2:5].isdigit() and matricula[5:].isalpha():
+    elif len(matricula) == 7 and matricula[0] == 'C' and matricula[1:5].isdigit() and matricula[5:].isalpha() and len(matricula[5:]) == 2:
         print("Matrícula identificada como 'Ciclomotores'.")
         return True
     else:
         print("Error. Matrícula no circunscrita como válida.")
         return False
-def ComprobarIBAN(iban:str)->bool: #Función que transposiciona el IBAN introducido para calcular si el número de control es válido o no lo es mediante operaciones matemáticas modulares
+def ComprobarIBAN(iban:str)->bool: 
+    '''Función que transposiciona el IBAN introducido para 
+    calcular si el número de control es válido o no 
+    lo es mediante operaciones matemáticas modulares
+    '''
     #NControl - ESCC NNNN NNNN NNNN NNNN NNNN // ES9121000418450200051332 IBAN VÁLIDO
     copiaNum=iban[2:4]
     iban_transpuesto = iban[4:] + '142800' 
@@ -102,15 +107,19 @@ def ComprobarIBAN(iban:str)->bool: #Función que transposiciona el IBAN introduc
     else:
         return False
 def SerialPoliza(numeradorPoliza):
+    '''Funcion que incrementa 1 al identificador poliza'''
     numeradorPoliza+=1
     return numeradorPoliza
 def SerialRecibo(numeradorRecibo):
+    '''Funcion que incrementa 1 al identificador recibo'''
     numeradorRecibo+=1
     return numeradorRecibo
 def SerialSiniestro(numeradorSiniestro):
+    '''Funcion que incrementa 1 al identificador del siniestro'''
     numeradorSiniestro+=1
     return numeradorSiniestro
 def ComprobarCorreoElectronico(direccion:str) -> bool:
+    '''Funcion que valida correos electronicos para este supuesto practico'''
     direccion_antes_arroba = direccion.partition('@')
     direccion_despues_punto = direccion_antes_arroba[2].partition(".")
     antes_arroba = direccion_antes_arroba[0]  #Parte antes de '@'
@@ -130,25 +139,30 @@ def ComprobarCorreoElectronico(direccion:str) -> bool:
         return False
 
 def RecogerBanlistPolizas(Polizas:list) -> list:
+    '''Funcion que actualiza la banlist o lista de prohibidos de id_tomador referidos a las polizas'''
     banlist=[]
     for elto in Polizas:
         for subelto in elto:
             banlist.append(subelto['id_tomador'])
     return banlist
 def RecogerBanlistTomador(tomador:list)-> list:
+    '''Funcion referida a actualizar la lista de prohibidos o banlist referidos a los tomadores'''
     banlist=[]
     for elto in tomador:
         for subelto in elto:
             banlist.append(subelto['id_tomador'])
     return banlist
 def RecogerBanlistRecibo(recibos: list) -> list:
+    '''Funcion referida a actualizar la lista de prohibidos o banlist de recibos'''
     banlist = []
     for elto in recibos:
         if elto:  
             for subelto in elto:
-                banlist.append(subelto['nro_poliza']) 
+                banlist.append(subelto['id_recibo']) 
     return banlist
-def NumSiniestro(numSiniestro:int) ->str: #Toma un nº de siniestro inicializado en 0 y cuando se pasa a la función de creación se modifica.
+def NumSiniestro(numSiniestro:int) ->str: 
+    '''Funcion que crea un numero de serie a un siniestro'''
+    #Toma un nº de siniestro inicializado en 0 y cuando se pasa a la función de creación se modifica.
     #aaaa-nro_correlativo
     #ESTRUCTURA ANTES DEL -
     while True:
@@ -165,6 +179,7 @@ def NumSiniestro(numSiniestro:int) ->str: #Toma un nº de siniestro inicializado
             else:
                 print("Error. El año debe comprender entre 1900-2025.")
 def NumLiquidaciones(numeradorLiquidaciones:int)->int:
+    '''funcion que recoje un num liquidacion y lo incrementa en 1'''
     numeradorLiquidaciones+=1
     return numeradorLiquidaciones
 

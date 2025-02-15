@@ -2,32 +2,35 @@
 
 id_recibo=0
 def CrearRecibo(id_recibo:int, banlist:list, polizas:list) -> list:
+    '''Funcion que permite crear recibos nuevos ajustandonos a las restricciones
+    impuestas por el enunciado. 
+    La banlist quedó deprecated en términos de uso, pero se mantiene por temas de evolución del programa'''
     lista = []
     ID = []
     
     print("Bienvenido/a al asistente de creación de recibos.\nPrimero seleccione un ID de póliza sobre la cual formalizar el recibo.")
     print("Se muestran a continuación una serie de números identificadores. Escoja el número sobre el cual crear un recibo asociado.")
     
-    # Mostrar las pólizas disponibles y recoger sus IDs
+    #mostramos las polizas y cogemos los IDs
     for elto in polizas:
         for subelto in elto:
             print(f"- {subelto['nro_poliza']}", end=' ')
-            ID.append(subelto['nro_poliza'])  # Guardar IDs de pólizas
+            ID.append(subelto['nro_poliza'])  #guardamos los IDs de las polizas
 
     print()
     eleccion=input("Seleccione un número de póliza >>> ")
  
 
-    # Verificar si la elección está en las pólizas existentes
+    #Vserificamos si la elección está en las pólizas existentes
     if eleccion not in ID:
         print("No se ha seleccionado ninguna identificación asociada a una póliza. Volviendo al menú principal.")
         return None
-
-    # Continuar con la creación del recibo
+    
+    #Continuar con la creación del recibo
     print("Cargando otros datos...")
     print("\nEstablecer ahora la fecha de inicio del recibo (DD/MM/AAAA).")
 
-    # Validación de fecha de inicio
+    #Validación de fecha de inicio
     if eleccion in ID:
         while True:
             fecha_inicio = input(">>> ")
@@ -44,7 +47,7 @@ def CrearRecibo(id_recibo:int, banlist:list, polizas:list) -> list:
                 print("Error. La fecha de nacimiento introducida no es válida. Por favor, introduzca una fecha en el formato DD/MM/AAAA.")
                 continue
 
-        # Duración del recibo
+        #Duración del recibo
         print("\nCargando rutinas de estado de duración de un recibo...")
         duraciones = ('A', 'S', 'T', 'M')
         while True:
@@ -56,16 +59,16 @@ def CrearRecibo(id_recibo:int, banlist:list, polizas:list) -> list:
             else:
                 print("Error. Seleccione correctamente entre las opciones listadas anteriormente (Indicadas en el paréntesis).")
 
-        # Importe a cobrar
+        #Importe a cobrar
         while True:
             try:
                 importe_cobrar = float(input("Escriba el monto a cobrar en cada vencimiento del periodo de liquidación >>> "))
                 print("Importe seleccionado.")
                 break
-            except ValueError:
+            except ValueError: #levantamos la excepcion en caso de error de valor
                 print("Error. Escriba solamente entradas numéricas decimales en el importe a cobrar.")
 
-        # Fecha de cobro
+        #Fecha de cobro
         while True:
             fecha_cobro = input("Establezca la fecha de cobro (DD/MM/AAAA) >>> ")
             if len(fecha_cobro) == 10 and fecha_cobro[2] == '/' and fecha_cobro[5] == '/' and \
@@ -79,7 +82,7 @@ def CrearRecibo(id_recibo:int, banlist:list, polizas:list) -> list:
             else:
                 print("Error. Formato incorrecto. Use DD/MM/AAAA.")
 
-        # Estado del recibo
+        #Estado del recibo
         estadosrecibos = ['P', 'PB', 'C', 'CB', 'B']
         while True:
             print("Seleccione el estado del recibo:\n(P)endiente\n(PB)endiente_banco\n(C)obrado\n(CB)obrado_banco\n(B)aja")
@@ -145,13 +148,10 @@ def CrearRecibo(id_recibo:int, banlist:list, polizas:list) -> list:
             'fecha_liquidacion':fecha_liquidacion,
             }
         lista.append(dNroRecibo)
-
-        # Actualizar banlist con la póliza utilizada
-        # banlist.append(eleccion)
-
         print(f"Recibo creado con identificador {id_recibo}")
         return lista
 def ModificarRecibo(lista_recibos: list, polizas:list) -> list:
+    '''Funcion que permite modificar recibos'''
     CAMPOS=[]
     nroPol=[]
     duraciones = ('A', 'S', 'T', 'M')
@@ -192,7 +192,7 @@ def ModificarRecibo(lista_recibos: list, polizas:list) -> list:
                     print(f"- {campo}", end=' ')
                 seleccionarCampo=input(">>> ").lower()
                 if seleccionarCampo in CAMPOS:
-                    match seleccionarCampo:
+                    match seleccionarCampo: #es en este paraguas donde seleccionamos campo y modificamos
                         case 'nro_poliza':
                             print("Nº de póliza anterior")
                             for elto in lista_recibos:

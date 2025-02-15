@@ -2,52 +2,54 @@
 from Utilidades import ValidarDocumento
 from Utilidades import ComprobarMatricula
 from Utilidades import ComprobarIBAN
-import Utilidades
 def CrearPoliza(nro_poliza:int, tomadores:list, banlist:list) -> list:
+    '''Función que permite formalizar una póliza mediante diferentes bucles con sus respectivas validaciones.
+    Se contemplan las matrículas de la DGT normales y las de ciclomotores traídas desde el archivo modular de 
+    utilidades. Además, se implementa el algoritmo de validación de documentación NIF/NIE/CIF y el algoritmo del IBAN'''
     lista=[]
     listaCoberturas=[]
-    tipoVehiculo=('Ciclomotor','Moto', 'Turismo','Furgoneta','Camión')
+    tipoVehiculo=('ciclomotor','moto', 'turismo','furgoneta','camion')
     coberturasDisponibles=('RC', 'RL', 'INC', 'RB', 'TR')
     cobertura=()
     documentosDisponibles=[]
 
     print("Bienvenido al asistente creador de pólizas.\nRellene adecuadamente los siguientes datos:")
+    print()
     for elto in tomadores:
         for subelto in elto:
             documentosDisponibles.append(subelto['id_tomador'])
     while True:
-        print("Mostrando documentos registrados en el sistema:")
+        print("Mostrando documentos registrados en el sistema")
         print(documentosDisponibles)
             
-            # Solicitar el ID del tomador
+            #se solicita el id del tomador
         id_tomador = input("Escriba el NIF | NIE | CIF >>> ")
 
-            # Validar el ID del tomador
-        if id_tomador in banlist: #Se checkea primero si está en la lista de id ya registrados.
+            #Validamos el id a ver si ya está en la banlist
+        if id_tomador in banlist: #Se checkea primero si está en la lista de id ya registrados
             print("Error. El id ya se encuentra registrado en la base de datos. Pruebe con otro.")
             continue
-
+            #en este paraguas cogemos y rompemos el bucle infinito
         elif id_tomador in documentosDisponibles and id_tomador not in banlist:
             if ValidarDocumento(id_tomador):
                 print("Documento validado correctamente.")
                 break
             else:
-                    print("Error. El tipo de documento no es válido según las normas de validación estándares en España.\nEscriba nuevamente un valor para NIF | NIE | CIF\n\n")
+                print("Error. El tipo de documento no es válido según las normas de validación estándares en España.\nEscriba nuevamente un valor para NIF | NIE | CIF\n\n")
 
         elif id_tomador not in documentosDisponibles:
             print(f"El ID {id_tomador} no figura en la base de datos como tomador registrado. Seleccione un ID válido de los previamente registrados.")
         
         else:
             print(f"Error inesperado. Intente nuevamente. Detalles:\nID ingresado: {id_tomador}\nIDs disponibles: {documentosDisponibles}\nBanlist actual: {banlist}")
-    while True:
-        matricula=input("Escriba la matrícula del vehículo que requiere registro >>> ").upper()
+    while True: #---------datos del vehiculo
+        matricula=input("Escriba la matrícula del vehículo que requiere registro | Ejemplos -> (0418UTE / C0844TE)>>> ").upper()
         if ComprobarMatricula(matricula):
             break
         else:
-            print("Error. La matrícula introducida tiene un formato inválido.")
             continue
     while True:
-        tipo=input(f"Seleccione ahora un tipo de vehículo que quiera registrar - datos disponibles > {tipoVehiculo} >>> ")
+        tipo=input(f"Seleccione ahora un tipo de vehículo que quiera registrar - datos disponibles > {tipoVehiculo} >>> ").lower()
         if tipo in tipoVehiculo:
             print(f"Vehículo de tipo {tipo} seleccionado.")
             break
@@ -68,24 +70,24 @@ def CrearPoliza(nro_poliza:int, tomadores:list, banlist:list) -> list:
         else:
             print("Error. No se admiten valores nulos o vacíos.")
     while True:
-        tipoFuncionamiento=('Combustión', 'Eléctrico', 'Mixto')
-        funcionamiento=input(f"Selecciona un valor correspondiente al funcionamiento del vehículo figurado en la siguiente tupla - {tipoFuncionamiento} >>> ")
+        tipoFuncionamiento=('combustion', 'electrico', 'mixto')
+        funcionamiento=input(f"Selecciona un valor correspondiente al funcionamiento del vehículo figurado en la siguiente secuencia - {tipoFuncionamiento} >>> ").lower()
         if funcionamiento in tipoFuncionamiento:
             print("Dato proporcionado con éxito.")
             break
         else:
             print("Error. Seleccione adecuadamente entre la tupla figurante.")
     datos_vehiculo=(tipo, marca, modelo, funcionamiento)
-    print(f"En la empresa tenemos para contratar las siguientes coberturas - {coberturasDisponibles} \n Transcripción\nRC - Responsabilidad Civil \nRL - Rotura de lunas\nINC - Incendio\nRB - Robos\nTR - Seguro a todo riesgo")
+    print(f"En la empresa tenemos para contratar las siguientes coberturas - {coberturasDisponibles} \nTranscripción\nRC - Responsabilidad Civil \nRL - Rotura de lunas\nINC - Incendio\nRB - Robos\nTR - Seguro a todo riesgo")
     print("Ud. puede contratar más de una cobertura.")
     trContratado=False
     cobContratadas=[]
     estandar=False
-    while True:
+    while True: #coberturas disponibles 
         eleccionCobertura=input(f"Escriba su elección entre {coberturasDisponibles} o el caracter @ para parar: ")
         if eleccionCobertura != '@' and eleccionCobertura in coberturasDisponibles and eleccionCobertura not in listaCoberturas:
             if eleccionCobertura == 'TR' and not trContratado:
-                franquicia = input(f"Escriba la franquicia colaboradora asociada a la cobertura >>> ")
+                franquicia = input(f"Escriba la franquicia colaboradora asociada a la cobertura >>> ").upper()
                 valor_franquicia = ('TR', franquicia)
                 listaCoberturas.append(valor_franquicia)
                 cobContratadas.append(eleccionCobertura)
@@ -111,7 +113,7 @@ def CrearPoliza(nro_poliza:int, tomadores:list, banlist:list) -> list:
         cobertura='RC'
     idConductor=[]
     print("A continuación se detallan los datos pertenecientes a los conductores del vehículo registrado.")
-    while True:
+    while True: #documentacion de la persona conductora
         while True:
             nifnie=input("Escriba el DNI/NIE de la persona física conductora del vehículo >>> ")
             if ValidarDocumento(nifnie):
@@ -120,7 +122,7 @@ def CrearPoliza(nro_poliza:int, tomadores:list, banlist:list) -> list:
                 break
             else:
                 print("Error. El tipo de documento no es válido según las normas de validación estándares en España.\nEscriba nuevamente un valor para DNI/NIE.\n\n")
-        while True:
+        while True: #fecha de nacimiento del conductor del veh
             fecha_nacimiento=input("Detalle la fecha de nacimiento del conductor en el siguiente formato (DD/MM/AAAA) >>> ")
             if len(fecha_nacimiento)==10 and fecha_nacimiento[2]=='/' and fecha_nacimiento[5]=='/' and fecha_nacimiento[:2].isdigit() and fecha_nacimiento[3:5].isdigit() and fecha_nacimiento[6:].isdigit():
                 fechaNac=fecha_nacimiento.split('/')
@@ -135,7 +137,7 @@ def CrearPoliza(nro_poliza:int, tomadores:list, banlist:list) -> list:
             else:
                 print("Error. La fecha de nacimiento introducida no es válida. Por favor, introduzca una fecha en el formato DD/MM/AAAA.")
                 continue
-        while True:
+        while True: #tipos de carné que existen, lo almacenamos en tupla
             tiposCarne=('AM','A1','A2','A','B1','B','C1','D1','D','BE','C1E','CE','D1E','DE')
             tipo_carnet=input(f"Seleccione un carné de entre el siguiente catálogo - {tiposCarne} >>> ")
             if tipo_carnet in tiposCarne:
@@ -144,7 +146,7 @@ def CrearPoliza(nro_poliza:int, tomadores:list, banlist:list) -> list:
                 break
             else:
                 print("Error. Seleccione correctamente un tipo de carné de conducir.")
-        while True:
+        while True: #emisión del carné - fecha
             fecha_carnet=input("Establezca una fecha de emisión del carné con el formato DD/MM/AAAA >>> ")
             if len(fecha_carnet)==10 and fecha_carnet[2]=='/' and fecha_carnet[5]=='/' and fecha_carnet[:2].isdigit() and fecha_carnet[3:5].isdigit() and fecha_carnet[6:].isdigit():
                 fechaCarnet=fecha_carnet.split('/')
@@ -210,7 +212,7 @@ def CrearPoliza(nro_poliza:int, tomadores:list, banlist:list) -> list:
             print("Forma de pago elegida: Banco")
             while True:
                 print("Se debe validar el IBAN del propietario de la póliza.")
-                iban=input("Escriba el IBAN del propietario de la póliza >>> ")
+                iban=input("Escriba el IBAN del propietario de la póliza >>> ").upper
                 iban=iban.replace(' ', '')
                 if len(iban)==24 and iban[0:2].isalpha() and iban[2:].isdigit():
                     print("Validando el IBAN, espere...")
@@ -227,7 +229,7 @@ def CrearPoliza(nro_poliza:int, tomadores:list, banlist:list) -> list:
             if VALIDADO:
                 print("Datos aceptados correctamente.")
                 break
-
+    #creamos aqui el dict para traerlo al return
     dNroPoliza={'nro_poliza':str(nro_poliza), #string del nro_poliza 
                 'id_tomador':id_tomador,
                 'matricula':matricula,
@@ -243,9 +245,9 @@ def CrearPoliza(nro_poliza:int, tomadores:list, banlist:list) -> list:
     print("Volviendo al menú principal.")
     return lista
 def ModificarPoliza(poliza:list, banlistPolizas:list, tomadores:list) -> list:
-    #1. Se tiene que seleccionar la póliza, la llamamos por el ID.
     '''ID -> lista que contiene los identificadores de las pólizas - se usa para validar
-       CAMPOS -> lista que contiene los campos de las pólizas - se usa para acceder a los datos de manera sencilla'''
+       CAMPOS -> lista que contiene los campos de las pólizas - se usa para acceder a los datos de manera sencilla
+       función que permite modificar pólizas respetando las restricciones impuestas por el enunciado.'''
     ID=[]
     CAMPOS=[]
     for lista in poliza:               
@@ -275,9 +277,9 @@ def ModificarPoliza(poliza:list, banlistPolizas:list, tomadores:list) -> list:
                 print()
                 seleccionCampo=input("Escriba el campo correspondiente >>> ")
                 break
-            
+            #llegados a este paraguas, seleccionamos los campos a modificar y nos retorna siempre que terminemos al menu.
             match seleccionCampo:
-                case 'id_tomador': #probado y funcional
+                case 'id_tomador':
                     while True:
                         TOMADORESID=[]
                         for elto in tomadores:
@@ -307,7 +309,7 @@ def ModificarPoliza(poliza:list, banlistPolizas:list, tomadores:list) -> list:
                                 print("Error. El tipo de documento no es válido según las normas de validación estándares en España.\nEscriba nuevamente un valor para NIF | NIE | CIF\n\n")
                         else:
                             print("Esa identificación no se encuentra entre las bases de datos registradoras o ya se ha usado con anterioridad.")
-                case 'matricula': #probado y funcional
+                case 'matricula': #
                     print("Antigua matrícula")
                     for elto in poliza:
                         for subelto in elto:
@@ -326,8 +328,8 @@ def ModificarPoliza(poliza:list, banlistPolizas:list, tomadores:list) -> list:
                                         
                         else:
                             print("Error. La matrícula introducida tiene un formato inválido.")
-                            continue            
-                case 'datos_vehiculo': #probado y funcional
+                            continue   
+                case 'datos_vehiculo':
                         tipoVehiculo=('Ciclomotor','Moto', 'Turismo','Furgoneta','Camión')
                         print("Se muestran los antiguos datos del vehículo registrado")
                         for elto in poliza:
@@ -372,7 +374,7 @@ def ModificarPoliza(poliza:list, banlistPolizas:list, tomadores:list) -> list:
                                     print("Datos cambiados correctamente.")
                                     return poliza, banlistPolizas, tomadores
 
-                case 'cobertura': #probado y funcional
+                case 'cobertura': 
                     listaCoberturas=[]
                     coberturasDisponibles=('RC', 'RL', 'INC', 'RB', 'TR')
                     print(f"En la empresa tenemos para contratar las siguientes coberturas - {coberturasDisponibles} \n Transcripción\nRC - Responsabilidad Civil \nRL - Rotura de lunas\nINC - Incendio\nRB - Robos\nTR - Seguro a todo riesgo")
@@ -411,7 +413,7 @@ def ModificarPoliza(poliza:list, banlistPolizas:list, tomadores:list) -> list:
                                 break
                         else:
                             print(f"Error. Escriba una cobertura de entre las disponibles en el sistema y que no haya sido contratada. \n-> C. CONTRATADAS >>> {cobContratadas}")
-                    if not estandar: #probado y funcional
+                    if not estandar:
                         cobertura=tuple(listaCoberturas)
                         for elto in poliza:
                             for subelto in elto:
@@ -428,7 +430,7 @@ def ModificarPoliza(poliza:list, banlistPolizas:list, tomadores:list) -> list:
                                     print("La cobertura estándar se ha actualizado por defecto.")     
                                     return poliza, banlistPolizas, tomadores
           
-                case 'id_conductor': #probado y funcional
+                case 'id_conductor': 
                     print("Antiguos registros de la identificación del conductor: ")
                     idConductor=[]
                     for elto in poliza:
@@ -494,7 +496,7 @@ def ModificarPoliza(poliza:list, banlistPolizas:list, tomadores:list) -> list:
                                 subelto['id_conductor']=id_conductor
                                 print("Datos correctamente actualizados.")
                                 return poliza, banlistPolizas, tomadores                
-                case 'estado_poliza': #probado y funcional
+                case 'estado_poliza':
                     print("Se observa el antiguo estado de la póliza:")
                     for elto in poliza:
                         for subelto in elto:
@@ -522,7 +524,7 @@ def ModificarPoliza(poliza:list, banlistPolizas:list, tomadores:list) -> list:
                                 print("Estado de la póliza actualizada y modificada con éxito.")
                                 return poliza, banlistPolizas, tomadores
 
-                case 'fecha_emision': #probado y funcional
+                case 'fecha_emision': 
                     print("Antigua fecha de emisión del carné: ")
                     for elto in poliza:
                         for subelto in elto:
@@ -549,7 +551,7 @@ def ModificarPoliza(poliza:list, banlistPolizas:list, tomadores:list) -> list:
                                 print("Fecha de emisión actualizada con éxito.")
                                 return poliza, banlistPolizas, tomadores
                     
-                case 'forma_pago': #probado y funcional
+                case 'forma_pago': 
                     print("Antiguos datos formalizados:")
                     for elto in poliza:
                         for subelto in elto:
@@ -596,10 +598,11 @@ def ModificarPoliza(poliza:list, banlistPolizas:list, tomadores:list) -> list:
             print("El ID seleccionado no es válido. Asegúrese de que el número de póliza esté en la lista.")
             return poliza
 def EliminarPoliza(polizas:list, banlistPolizas:list, tomadores:list, banlistTomadores:list, recibos:list, banlistRecibos:list, siniestros:list) -> list:
+    '''Función que elimina pólizas ajustandonos a las restricciones que nos impone la práctica 
+    y a las políticas de borrado (similares a CASCADE en SQL)'''
     print("Números de póliza disponibles") 
     print("-----------------------------")
     ids = []
-    encontrado = False
     id_tomador = None  #Inicializamos la variable para evitar posibles errores en la ejecucion
 
     for elto in polizas:
@@ -654,7 +657,8 @@ def EliminarPoliza(polizas:list, banlistPolizas:list, tomadores:list, banlistTom
     else:
         print("Error. No se encuentra el ID asociado.")
         return polizas, banlistPolizas, tomadores, banlistTomadores, recibos, banlistRecibos, siniestros
-                            
+##////////////////////////////////////////////////////////////////////////////////////////////////////7
+'''HA PASADO EL TEST DE PRUEBAS ADECUADAMENTE CON UNA GRAN COLECCIÓN DE DATOS'''                            
             
                     
 

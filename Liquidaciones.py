@@ -1,56 +1,7 @@
 #Cristopher Méndez Cervantes | Ángel Cristo Castro Martín
-# Función para crear una liquidación
-'''Tendrá opciones para generar, modicar y cerrar una liquidación.
-Cosas a tener en cuenta:
-• No se permiten liquidaciones con igual identicación, recordar que es un campo
-con números correlativos.
-• La liquidación se genera de la siguiente forma:
-- Se barre la lista de recibos y se cogen todos los recibos que se han cobrado
-por la agencia y que no se han liquidado a la compañía de seguros. Se
-totaliza la cantidad de dinero que se debería pagar a la compañía por este
-concepto.
-- Luego se barre la lista de siniestros para conseguir todos aquellos que ha
-pagado la agencia pero que no se han descontado (liquidado) todavía a la
-compañía de seguros. Se totaliza la cantidad de dinero que se debería pagar
-a la compañía por este concepto.
-- Por último, se barre la lista de recibos y se cogen todos los recibos que son
-baja y que no se han descontado a la compañía de seguros. Se totaliza la
-cantidad de dinero que ya no debemos enviar a la compañía.
-- Se rellenan el resto de campos con los cálculos explicados al comienzo, a
-excepción del campo estado.
-- Cerrar una liqui    dación lo que hace es cambiar de estado a una liquidación
-abierta existente.'''
-#Estructura de datos
-'''Liquidaciones: es la estructura que contiene los datos de las liquidaciones
-realizadas a la aseguradora. Se trata de una lista en la que cada elemento será un
-diccionario con los campos siguientes:
-nro_liquidacion: campo que identica al siniestro. Tiene el siguiente formato
-aaaa-nro_correlativo
-fecha_liquidación: la fecha en la que se realiza la liquidación.
-estado_liquidacion: Un campo con dos valores:
-• Abierta: es el estado en el que se crea la liquidación.
-• Cerrada: cuando se ha da por buenos los datos de la liquidación.
-(1) importe_recibos_cobrados: suma de los importes a pagar de los recibos
-cobrados por la correduría que se deben abonar a la compañía de seguros.
-***lista_recibos_liquidar: una lista con tuplas con la siguiente información:
-(nro_poliza, nro_recibo).
-(2) importe_recibos_baja: suma de los importes a dar de baja de la deuda de los
-recibos no cobrados por la correduría de las pólizas que se van a dar de baja.
-lista_recibos_baja: una lista con tuplas con la siguiente información: (nro_poliza,
-nro_recibo).
-(3) importe_siniestros_pagados: suma de los importes abonados por la
-correduría de los siniestros pagados a descontar en la liquidación.
-lista_siniestros_pagados: una lista con tuplas con la siguiente información:
-(nro_poliza, nro_siniestro).
-importe_liquidacion: Una tupla con la siguiente información ( (1) - (3), (2) ). El
-primer campo es la resta de lo marcado como (1) menos el importe de lo marcado
-como (3), el segundo campo es el valor marcado como (2).'''
-
-#Es el año actual el que se pone en la fecha
-
-
-
 def CrearLiquidacion(recibos:list, siniestros:list, serial:int)->list:
+    '''Funcion que permite crear una liquidacion mediante la barrida de los datos de siniestros y recibos
+    respetando las normas impuestas por el ejc'''
     recibos
     siniestros
     serial
@@ -125,10 +76,10 @@ def CrearLiquidacion(recibos:list, siniestros:list, serial:int)->list:
     liquidacion=[]
     liquidacion.append(dLiquidacion)
     return liquidacion
-def ModificarLiquidacion(liquidacion:list, siniestros:list, recibos:list)->list:
-    ''' No se puede modificar una liquidación que ya está "Cerrada".
-    Solo se pueden agregar recibos, siniestros o bajas que no estén ya en otra liquidación.
-    Si se eliminan todos los elementos de la liquidación, se debe dar la opción de eliminarla completamente.'''
+def ModificarLiquidacion(liquidacion:list)->list:
+    ''' 
+    Funcion que permite cambiar la fecha de la liquidacion
+    '''
     print("Estas son todas las liquidaciones registradas hasta ahora: ")
     PROHIBIDOS=[]
     LIQUIDACIONES=[]
@@ -142,7 +93,7 @@ def ModificarLiquidacion(liquidacion:list, siniestros:list, recibos:list)->list:
                 PROHIBIDOS.append(subelto['nro_liquidacion'])
             else:
                 LIQUIDACIONES.append(subelto['nro_liquidacion'])
-    print("Liquidaciones NO MODIFICABLES en el registro")
+    print("Liquidaciones NO MODIFICABLES en el registro (cerradas)")
     for elto in PROHIBIDOS:
         print(elto)
     print("Liquidaciones disponibles a modificar: ")
@@ -177,6 +128,9 @@ def ModificarLiquidacion(liquidacion:list, siniestros:list, recibos:list)->list:
 ##El siguiente paso ahora es cerrar la liquidación, lo que significa mandar un mensaje al usuario para que confirme y, además, 
 #se debe hacer antes del return
 def CerrarLiquidacion(recibos:list, siniestros:list, liquidaciones:list)->list:
+    '''Funcion que permite crear un cierre de liquidacion teniendo en cuenta las 
+    normas del ejercicio y basandonos en estados lógicos. Cuando se cierra, tambien se actualiza
+    el estado_liq en recibos y siniestros'''
     liqEncontrada=False
     while True:
         for elto in liquidaciones:
@@ -228,3 +182,9 @@ def CerrarLiquidacion(recibos:list, siniestros:list, liquidaciones:list)->list:
             else:
                 print("Error. No se ha encontrado el id de la liquidación a cerrar.")
                 return recibos, siniestros, liquidaciones
+        elif confirmar == 'n':
+            print("Volviendo al menu principal.")
+            return recibos, siniestros, liquidaciones
+        else:
+            print("Seleccione correctamente entre s/n")
+

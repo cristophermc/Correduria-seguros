@@ -136,9 +136,9 @@ def ModificarTomador(listaTomador:list)->list:
 
     for dato in listaTomador:
         for valor in dato:
-            # Añadir ID
+            #Añadimos id
             ID.append(valor['id_tomador'])
-            # Añadir claves, verificando que no haya duplicados ni 'id_tomador'
+            #Añadimos claves, verificando que no hayan duplicados ni 'id_tomador'
             for clave in valor.keys():
                 if clave != 'id_tomador' and clave not in CAMPOS:
                     CAMPOS.append(clave)
